@@ -1,0 +1,46 @@
+﻿CCTableViewCell* kOfficialPosLayer::tableCellAtIndex(CCTableView *table, unsigned int idx)
+{
+    CCTableViewCell *cell = table->dequeueCell();
+
+    initPosNameArrays();
+    
+    const char* strPosName = posNameArr.at(idx)->getCString();
+    CCLog("xxx:%d,%s",idx,strPosName);
+    if(!cell)
+    {
+        initBtnNormalBg();
+        cell = new CCTableViewCell();
+        cell->autorelease();
+        CCLabelTTF *title = CCLabelTTF::create(strPosName, "Marker Felt", 13.0);
+        title->setColor(ccYELLOW);
+        title->setTag(123);
+//        title->setAnchorPoint(ccp(0,0));
+        CCControlButton *btnAccept = CCControlButton::create(title, btnNormal);
+        btnAccept->setPreferredSize(CCSizeMake(116, 33));
+        btnAccept->setAnchorPoint(CCPointZero);
+        btnAccept->setPosition(ccp(0,0));
+        btnAccept->setZoomOnTouchDown(false);
+        cell->addChild(btnAccept,0,12);
+//         cell->addChild(title, 0);
+    }
+    else
+    {
+        CCControlButton *btnAccept = (CCControlButton *)cell->getChildByTag(12);
+        // first time you set this will work okey,but when you click ,will make some thing wrong
+//        CCLabelTTF *lbl = (CCLabelTTF *)btnAccept->getChildByTag(123);
+//        lbl->setString(strPosName);
+        // ccbutton's touchbegan event will trigger button change state string,if there is not state
+        // string,button will set label by use default state string,
+        // if you do not change the state string,the click event will broke your thought
+        // example:
+        // such as at begin,table view init 8 cell here,and set the default state string as posname 48-54
+        // and when scroll to right position,it will update the label's texture use posname 1-8 by upper call,
+        // but it will never change the cccontrolbutton's default state string,when button click trigger,button
+        // will change state string,if there is not state string,button will set label by use default state
+        // string and it will showout when you click posname3,the label change to posname50 .this may be a
+        // bug for ccbutton?
+        // i use this for avoid the situation upper,when scroll,or new cell setting,it will change the
+        // state string for next use
+        CCString* cc = CCString::create(strPosName);
+        btnAccept->setTitleForState(cc, CCControlStateNormal);
+    }

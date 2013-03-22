@@ -1,0 +1,4 @@
+﻿Xcode is sweet that auto git for you,if you want to use svn as your version manager
+1.set your svn host in your /etc/hosts file,add at bottom
+2.in Xcode,window->organizer->repositories,add new repositories at left panel by click icon +,if unreachable host,try connect svn in your console by "svn ls svn://blabla",then you can check out code from svn,and also commit,update it
+3.you Xcode will show your file's status ,such as m for modified,a for added ,i for problem need be updated

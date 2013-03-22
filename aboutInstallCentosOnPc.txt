@@ -1,0 +1,11 @@
+﻿0.thanks to Guo Wenxue<guowenxue@gmail.com>,see detail.txt for more
+1.download the iso image from centos.org,burn as a boot,and make your pc start with cdrom
+2.install step by step,i partion driver as four part,/,/boot,/home,and swap,and select as server development mode
+3.make sure you install as development version,make customize it by your self when be asked ,do not just make next and next ...
+4.after install,my Atheros AR8151 card is not auto by centos simply worked like in ubuntu,you should drive it by your self
+1).down load driver code here,http://code.google.com/p/wr2440/downloads/detail?name=vmware8%20install%20centos6.7z&can=2&q=#makechanges
+2).add a drivers folder in /usr/local/src,and untar the code to it,then go to the source code folder ,make && make install,it make a module atl1e.ko in /lib/modules/2.6.32-71.el6.x86_64/kernel/drivers/net/atl1e/
+3).load the module by insmod->insmod /lib/modules/2.6.32-71.el6.x86_64/kernel/drivers/net/atl1e/atl1e.ko.then you will see the eth0 in ifconfig
+4).config eth0 by your self
+5).set /etc/sysconfig/network file by your self for your own ipaddress and gateway
+6).reboot your machine and it will worked

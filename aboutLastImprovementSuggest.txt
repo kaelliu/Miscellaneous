@@ -1,0 +1,24 @@
+﻿server changeup in kael's java server 2013.3.14
+0.bsd liscence should be add and go to github
+1.no script level language ,script vm will increase cost and do not decrease logic layer's complexity
+-done seems..
+2.concurrent thread management
+1).Atomic for counter instead of massive size() call.-done
+2).shared memory access should lock part of memory not all/ or avoid as less as shared memory -done
+3).load/balance thread control,see nginx worker process control write/read for example
+3.memcached layer should not limit in sql query.but customize by your program logic,and 
+do not do double write operation(cached+db),dirty data should flush to db as priority at 
+certain time,very important data should write Immediately - done
+4.heart beat package added(s-needed/c-optional) ,for avoid client lost connection by unstopable forces -done
+5.huge data send solution way,exceed 65535 bytes for example,or over thread stack size exception
+1).increase socket send buffer -- not a good way
+2).send by splited small package -- pack/unpack solution should added by se
+3).async it,not Immediate data could send by http request if your game is not sync need crazy type
+4).paged send some part of data,not all
+6.protocolbuf/pure byte protocol added to decrease package size - pb done
+7.aio module should add but it is platform depended.nio is the normal solution.if abandon platform
+windows,should try aio for it. - epoll in linux 2.6
+8.read/write thread should set socket nonblocked,executor thread should managed by SE
+9.use as few transaction as possible,you can use sourced version mysql and change the transaction 
+lock part code to fit your wish,and do not flush disk log
+10.maybe use postgresql for instead?
