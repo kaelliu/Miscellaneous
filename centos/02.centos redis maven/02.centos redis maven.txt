@@ -59,7 +59,8 @@ jedis.del("foo");
 jedis.set("foo","kael");
 pool.returnResource(jedis);
 2).sharding pool in client
-3).more example on git hub search jedis
+3).some simple code is in same folder jedistest.tar.gz
+4).more example on github search jedis
 4.base data type in redis k-type
 string 		get/set
 hash    	hget/hset hset(KEY,FIELD,VALUE)/hgetall
