@@ -1,0 +1,9 @@
+﻿1.about ﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿***is not in the sudoer file.this incident will be reported.
+set in /etc/sudoer,add like root
+2.about shell programing,[ -abcdef...x FILE ] check document for more detail,is a judgement for some file.and [ condition ] should like this,
+not [condition] or [ condition] will make some error
+3.about chkconfig
+chkconfig --add/--del/--list/--lever 345 xxx on/off
+345 is run level,see document for detail,234 is console,5 is x for example
+# chkconfig: - 80 12
+80 means start sequence,12 is close sequence in system startup/shutdown

@@ -1,0 +1,12 @@
+1.what is smartfoxserver:
+smartfoxserver is a socket server writen in java,to implete zone-room Architecture type of server.
+2.how to install:
+download the package of your system in smartfoxserver.com.and unzip/untar it
+change the sfs2x.sh's java_cmd="java",and no nned JRE_FOLDER.THEN run the shell,you can run the tool in http://localhost:8080/admin
+3.add yourself's extensions
+import sfx2x.jar/sfx2x-core.jar to project,and extends SFSExtension ,this is for zone customize logic,you should registe SFSEventType and
+your client Request.every client handler is a BaseClientRequestHandler,and every server event handler is a BaseServerEventHandler,such as 
+user disconnect from server.
+when you finish this extension,you can put in server's zone extension and run the logic
+see simple project as detail
+the two jar sfs2x-2.0.jar and sfs2x-core-2.0.jar is in my maven repo which install in section 02
