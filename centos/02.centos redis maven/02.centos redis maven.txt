@@ -12,7 +12,16 @@ to make the project.
 5).use mvn eclipse:eclipse to generate eclipse project file and then can be import to eclipse ide.and add class path for M2_REPO:YOUR REPO FOLDER(which you make at step 3,it will have your project folder and repo folder)
 in windows->perference->java->class path
 6).add your package/update your package in pom.xml,or set build param to pack as war/jar,then you can use mvn eclipse:eclipse to reload project
-and use mvn package to pack
+and use" mvn package "to pack
+if want a runnable jar file,use maven-assembly-plugin to do this,add this and you can also mvn package in project folder for pack runnable jar
+<execution>
+   <phase>package</phase>
+   <goals>
+   <goal>single</goal>
+   </goals>
+   </execution>
+</executions>
+the whole part is in sample_pom.xml in same folder
 7).if you want to add yourself's package to local repo,use
 mvn install:install-file -DgroupId=com.smartfoxserver -DartifactId=sfs -Dversion=2.0 -Dfile=/yourdir/sfs2x.jar -Dpackaging=jar \-DgeneratePom=true
 
