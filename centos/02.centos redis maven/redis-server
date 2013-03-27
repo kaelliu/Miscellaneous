@@ -1,0 +1,81 @@
+#! /bin/sh
+#
+# redis - this scrpit starts and stops the redis-server
+# for centos
+# chkconfig:   - 80 12
+# description: redis is a persisten key-value database
+# author:      kaelliu
+# processname: redis-server
+# config:      /etc/redis.conf
+# pidfile:     /var/run/redis.pid
+
+. /etc/init.d/functions
+. /etc/sysconfig/network
+
+#check the networking is up
+[ "$NETWORKING" = "no" ] && exit 0
+
+BIN="/usr/local/bin"
+CONFIG="/etc/redis.conf"
+PIDFILE="var/run/redis.pid"
+
+RETVAL=0
+prog="redis-server"
+desc="Redis Server"
+
+start(){
+	#if[ -e $PIDFILE ];then
+	#	echo "$desc alreay running...." 
+	#	exit 1
+	#fi
+	[ -x $BIN/$prog ] || exit 5
+	[ -f $CONFIG ] || exit 6
+	echo -n $"Starting $desc:"
+	daemon $BIN/$prog $CONFIG
+
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog #$PIDFILE
+	return $RETVAL
+}
+
+stop(){
+	echo -n $"Stop $desc:"
+	killproc $prog
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/$prog #$PIDFILE
+	return $RETVAL
+}
+
+restart(){
+	stop
+	start
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	condrestart)
+		[ -e /var/lock/subsys/$prog ] && restart
+		RETVAL=$?
+		;;
+	status)
+		status $prog
+		RETVAL=$?
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+		RETVAL=1
+esac
+
+exit $RETVAL
+
+

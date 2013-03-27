@@ -1,4 +1,5 @@
 #! /bin/sh
+# for ubuntu!
 ### BEGIN INIT INFO
 # Provides:		redis-server
 # Required-Start:	$syslog

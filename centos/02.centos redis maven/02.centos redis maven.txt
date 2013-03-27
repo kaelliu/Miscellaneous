@@ -28,12 +28,12 @@ cd redis-2.6.11
 make
 sudo make install
 the runnable file of redis is put to /usr/local/bin
-2).get the init shell and config file,i save these file in same folder too
-wget https://github.com/ijonas/dotfiles/raw/master/etc/init.d/redis-server
+2).get the config file,i save these file in same folder too
 wget https://github.com/ijonas/dotfiles/raw/master/etc/redis.conf
-sudo mv redis-server /etc/init.d/redis-server
-sudo chmod +x /etc/init.d/redis-server
 sudo mv redis.conf /etc/redis.conf
+use the redis-server in my github folder
+mv redis-server /etc/init.d/redis-server
+chmod +x /etc/init.d/redis-server
 3).make a user for redis,and its folder
 sudo useradd redis
 sudo mkdir -p /var/lib/redis
@@ -41,10 +41,9 @@ sudo mkdir -p /var/log/redis
 sudo chown redis.redis /var/lib/redis
 sudo chown redis.redis /var/log/redis
 4).set it as a service
-chmod 755 /etc/init.d/redis
-chkconfig --add redis
-chkconfig --level 345 redis on
-chkconfig --list redis
+chkconfig --add redis-server
+chkconfig --level 345 redis-server on
+chkconfig --list redis-server
 5).run/stop
 service redis start
 service redis stop
