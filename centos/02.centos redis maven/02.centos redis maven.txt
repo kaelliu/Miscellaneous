@@ -1,0 +1,86 @@
+A.maven
+1.what is maven:
+Maven, a Yiddish word meaning accumulator of knowledge, was originally started as an attempt to simplify the build processes in the Jakarta Turbine project. There were several projects each with their own Ant build files that were all slightly different and JARs were checked into CVS. We wanted a standard way to build the projects, a clear definition of what the project consisted of, an easy way to publish project information and a way to share JARs across several projects.
+
+The result is a tool that can now be used for building and managing any Java-based project. We hope that we have created something that will make the day-to-day work of Java developers easier and generally help with the comprehension of any Java-based project.
+2.how to install:
+1).install a jdk and set enviroment variable first
+2).download maven package,upzip it and set M2_HOME variable in system,add to path $M2_HOME/bin,then mvn -version to check it is ok or not
+3).make your own repo place dir at hard disk,and modify maven/conf/setting.xml 's localRepository to right path
+4).make your test project folder,and use mvn archetype:create -DgroupId=com.kael -DartifactId=projectName -DpackageName=com.kael -Dversion=1.0
+to make the project.
+5).use mvn eclipse:eclipse to generate eclipse project file and then can be import to eclipse ide.and add class path for M2_REPO:YOUR REPO FOLDER(which you make at step 3,it will have your project folder and repo folder)
+in windows->perference->java->class path
+6).add your package/update your package in pom.xml,or set build param to pack as war/jar,then you can use mvn eclipse:eclipse to reload project
+and use mvn package to pack
+7).if you want to add yourself's package to local repo,use
+mvn install:install-file -DgroupId=com.smartfoxserver -DartifactId=sfs -Dversion=2.0 -Dfile=/yourdir/sfs2x.jar -Dpackaging=jar \-DgeneratePom=true
+
+B.redis
+1.what is redis:redis is memory database base on nosql.i use it as cache for main useage
+2.how to install:
+1).make a temp dir,and get the latest file,untar it an make & make install
+mkdir tmp
+cd /tmp
+wget http://redis.googlecode.com/files/redis-2.6.11.tar.gz
+tar -zxf redis-2.6.11.tar.gz
+cd redis-2.6.11
+make
+sudo make install
+the runnable file of redis is put to /usr/local/bin
+2).get the init shell and config file,i save these file in same folder too
+wget https://github.com/ijonas/dotfiles/raw/master/etc/init.d/redis-server
+wget https://github.com/ijonas/dotfiles/raw/master/etc/redis.conf
+sudo mv redis-server /etc/init.d/redis-server
+sudo chmod +x /etc/init.d/redis-server
+sudo mv redis.conf /etc/redis.conf
+3).make a user for redis,and its folder
+sudo useradd redis
+sudo mkdir -p /var/lib/redis
+sudo mkdir -p /var/log/redis
+sudo chown redis.redis /var/lib/redis
+sudo chown redis.redis /var/log/redis
+4).set it as a service
+chmod 755 /etc/init.d/redis
+chkconfig --add redis
+chkconfig --level 345 redis on
+chkconfig --list redis
+5).run/stop
+service redis start
+service redis stop
+6).run client
+redis-cli
+set foo bar
+get foo
+3.java integerate
+1).use jedis lib,you can use maven to get it,and always put it in spring
+pool = (JedisPool)app.getBean("jedisPool");
+Jedis jedis = pool.getResource();
+jedis.del("foo");
+jedis.set("foo","kael");
+pool.returnResource(jedis);
+2).sharding pool in client
+3).more example on git hub search jedis
+4.base data type in redis k-type
+string 		get/set
+hash    	hget/hset hset(KEY,FIELD,VALUE)/hgetall
+set		sadd/srem/scard(count)/srange
+list		lpush/rpush/lpop...
+sorted set	zadd/zscore(score for k-v in sort)/zrem/zcard
+zadd in jedis can add map as different set components
+5.data expire
+expire somekey 10
+ttl somekey
+6.memory optimization
+see redis.conf
+hash-max-zipmap-entries 64
+hash-max-zipmap-value 512
+7.data snapshot
+save 900 1     #900 seconds have one key changed,and save
+save 300 10    #300 seconds have 10 key changed,and save
+sava 60  10000 #60 seconds have 10000 key changed,and save
+8.master/slave
+in redis.conf
+slave of xxx.ipaddress
+and start master and slave,master 's change will take effect on slave
+9.cluster
