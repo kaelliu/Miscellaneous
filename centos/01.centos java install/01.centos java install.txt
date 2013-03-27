@@ -1,0 +1,7 @@
+1.yum -y remove java (remove origin installed java in centos)
+2.yum install java-1.7.0-openjdk(install)
+3.set path in ~/.bashrc
+like
+export JAVA_HOME="/YOUR/SUCK/JAVA_HOME"
+4.download eclipse jee version in eclipse.org
+5.you can run testcode in it now

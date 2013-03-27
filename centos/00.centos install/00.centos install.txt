@@ -1,0 +1,28 @@
+﻿1.首先用UltraISO写入U盘；然后可以删掉里面的Package文件夹，并且把CentOS的DVD1（3.5G我下的是。。。）复制到U盘根目录下。然后重启，用USB启动，进入安装时在寻找DVD的时候选择硬盘镜像即可
+2.pppoe network 
+首先安装好CentOS6以后要安装rp-pppoe这个软件，centos之前的版本所adsl-setup这个命令安装，到centos6改了。
+
+需要光驱内放好CentOS安装盘
+
+挂载光盘
+
+#mount /dev/cdrom /media
+
+找出文件路径
+
+# find /media -name 'rp-pppoe*'
+
+这个文件没有依赖项，可以直接安装
+
+#rpm -ivh /media/CentOS_6.0_Final/Packages/rp-pppoe-3.10-8.el6.i686.rpm
+
+然后按照提示做即可
+[root@localhost ~]# pppoe-start← 启动ADSL pppoe连接
+
+[root@localhost ~]# pppoe-status 设置完成后我们看看adsl状态
+to stop
+/sbin/ifdown ppp0 
+to start
+/sbin/ifup ppp0 
+to reconfig
+pppoe-setup
