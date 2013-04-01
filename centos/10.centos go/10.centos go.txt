@@ -1,0 +1,27 @@
+1.install mercurial
+yum install mercurial 
+2.get the code
+hg clone -r release https://go.googlecode.com/hg/go
+make sure your current dir do not contain dir named go
+3.install go
+cd go/src
+./all.bash
+4.config path in ~/.bashrc(root)
+add
+export GOOROOT=/home/kael/Downloads/go  # <-- my work place here
+export GOBIN=$GOROOT/bin
+export GOARCH=386	# <-- my computer do not have 6g(amd64),use 8g(386) here
+export GOOS=linux
+export PATH=.:$PATH:GOBIN
+source ~/.bashrc
+5.try 8g/6g can run or not
+6.write a hello world for example
+vim hello.go
+package main
+import "fmt"
+func main(){
+   fmt.Printf("hello world kael\n")
+} 
+go build hello.go
+and run it ./hello
+7.see https://golang.org/doc/code.html for more details
