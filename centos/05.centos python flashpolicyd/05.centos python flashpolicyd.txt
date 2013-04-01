@@ -1,0 +1,30 @@
+A.python
+1.if your centos is above 6 and python version is over 2.6,just go to section B
+2.in centos 5,the python in system is 2.4,but do not uninstall 2.4 because a lot of program is depend on it,i just add 2.7 by source code,
+and let 2.4 and 2.7 stay together
+1).download python
+wget http://www.python.org/ftp/python/2.7.2/Python-2.7.2.tgz
+2).tar jxvf Python-2.7.2.tgz
+cd Python-2.7.2
+./configure
+make && make install
+the 2.7 will be install in /usr/local/lib/python2.7
+you can check version by /usr/local/bin/python2.7 -V
+3).make Symbolic link make python point to python2.7,but yum is still base python2.4
+mv /usr/bin/python /usr/bin/python.bak (or rm -rf /usr/bin/python)
+ln /usr/local/bin/python2.7 /usr/bin/python
+p.s symbolic link is a link that when you operate this file,it will operate the real file which it point to,but when you delete the symbolic
+link file,will no delete the file which it point to
+4).repair yum
+vim /usr/bin/yum
+change the first line:#!/usr/bin/python to #!/usr/bin/python2.4 and it will works
+
+B.flash policyd
+1.flash web game use socket will need a policyd file such as crossdomain.xml which contains message of allowed port,i use python to listen
+on port 843 for flash policy file
+2.in centos,just run the script in same folder,it have four file
+install.sh -- for install file to place
+flashpolicyd.py -- the main runner of program
+flashpolicyd.init -- the script as service in centos,see redis part's service script
+flashpolicy.xml -- the config file for your allow port
+3.run install.sh and will be a service for flash policy
