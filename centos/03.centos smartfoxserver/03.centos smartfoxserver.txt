@@ -10,3 +10,4 @@ user disconnect from server.
 when you finish this extension,you can put in server's zone extension and run the logic
 see simple project as detail
 the two jar sfs2x-2.0.jar and sfs2x-core-2.0.jar is in my maven repo which install in section 02
+4.bluebox should add something at client side,if firewall block socket connection,bluebox will change to http
