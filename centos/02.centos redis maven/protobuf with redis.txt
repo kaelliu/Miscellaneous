@@ -1,0 +1,9 @@
+1.download protobuf.jar,protobuf.exe <-in windows,run in command line protobuf.exe --java_out=./folder ./xxx/msg.proto
+and take that java file you can use in project now(remember to add protobuf.jar to your build path)
+2.samples
+Person.proto for required/repeated section sample
+3.use u:id:value as key
+PersonInfo.AddressBook data2 = ba.build();
+byte [] value2 = data2.toByteArray();
+value as byte array
+4.dirty sorted set dirty_s 12333(timestamp) 1(uid)
