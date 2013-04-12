@@ -21,9 +21,8 @@ package com.finchstudio.five.utils.libkael
 		 * <pre>
 		 *	playerSM = new StateMachine();
 		 *
-		 *	playerSM.addState("playing",{ enter: onPlayingEnter, exit: onPlayingExit, from:["paused","stopped"] });
-		 *	playerSM.addState("paused",{ enter: onPausedEnter, from:"playing"});
-		 *	playerSM.addState("stopped",{ enter: onStoppedEnter, from:"*"});
+		 *	playerSM.addState("playing",new PlayingState());
+		 *	playerSM.addState("paused",new PauseState("playing"));
 		 *	
 		 *	playerSM.addEventListener(StateMachineEvent.TRANSITION_DENIED,transitionDeniedFunction);
 		 *	playerSM.addEventListener(StateMachineEvent.TRANSITION_COMPLETE,transitionCompleteFunction);
@@ -37,13 +36,8 @@ package com.finchstudio.five.utils.libkael
 		 *	<pre>
 		 *	monsterSM = new StateMachine()
 		 *	
-		 *	monsterSM.addState("idle",{enter:onIdle, from:"attack"})
-		 *	monsterSM.addState("attack",{enter:onAttack, from:"idle"})
-		 *	monsterSM.addState("melee attack",{parent:"atack", enter:onMeleeAttack, from:"attack"})
-		 *	monsterSM.addState("smash",{parent:"melle attack", enter:onSmash})
-		 *	monsterSM.addState("punch",{parent:"melle attack", enter:onPunch})
-		 *	monsterSM.addState("missle attack",{parent:"attack", enter:onMissle})
-		 *	monsterSM.addState("die",{enter:onDead, from:"attack", enter:onDie})
+		 *	monsterSM.addState("idle",new IdleState());
+		 *	monsterSM.addState("attack",new AttackState("idle"),"idle");// idle state should be add into statemachine's states first
 		 *	
 		 *	monsterSM.initialState = "idle"
 		 *	</pre>
@@ -53,10 +47,20 @@ package com.finchstudio.five.utils.libkael
 			_states = new Dictionary();
 		}
 		
-		public function addState(stateName:String, stateData:Object=null):void{
+		public function Update( time:Number ):void
+		{
+			if( _currentState.length != 0 )
+			{
+				trace("[StateMachine]",id,"updating current state " + _currentState);
+				_states[_currentState].update(time);
+			}
+		}
+		
+		public function addState(stateName:String, stateData:State,parent:String=""):void{
 			if(stateName in _states) trace("[StateMachine]",id,"Overriding existing state " + stateName);
-			if(stateData == null) stateData = {};
-			_states[stateName] = new State(stateName, stateData.from, stateData.enter, stateData.exit, _states[stateData.parent]);
+			if(stateData == null) trace("[StateMachine]",id,"add state failed " + stateName);
+			stateData.parent = _states[parent];
+			_states[stateName] = stateData;
 		}
 		
 		public function set initialState(stateName:String):void{
@@ -71,14 +75,14 @@ package com.finchstudio.five.utils.libkael
 					for(var j:int = _states[_state].parents.length-1; j>=0; j--){
 						if(parentStates[j].enter){
 							_callbackEvent.currentState = parentStates[j].name;
-							parentStates[j].enter.call(null,_callbackEvent);
+							parentStates[j].enter(_callbackEvent);
 						}
 					}
 				}
 				
 				if(_states[_currentState].enter){
 					_callbackEvent.currentState = _currentState;
-					_states[_currentState].enter.call(null,_callbackEvent);
+					_states[_currentState].enter(_callbackEvent);
 				}
 				_outEvent = new StateMachineEvent(StateMachineEvent.TRANSITION_COMPLETE);
 				_outEvent.toState = stateName;
@@ -161,14 +165,14 @@ package com.finchstudio.five.utils.libkael
 				
 				if(_states[_state].exit){
 					_exitCallbackEvent.currentState = _currentState;
-					_states[_state].exit.call(null,_exitCallbackEvent);
+					_states[_state].exit(_exitCallbackEvent);
 				}
 				parentState = _states[_currentState];
 				for(var i:int=0; i<path[0]-1; i++){
 					parentState = parentState.parent;
 					if(parentState.exit != null){
 						_exitCallbackEvent.currentState = parentState.name;
-						parentState.exit.call(null,_exitCallbackEvent);
+						parentState.exit(_exitCallbackEvent);
 					}
 				}
 			}
@@ -185,13 +189,13 @@ package com.finchstudio.five.utils.libkael
 					for(var k:int = path[1]-2; k>=0; k--){
 						if(parentStates[k] && parentStates[k].enter){
 							_enterCallbackEvent.currentState = parentStates[k].name;
-							parentStates[k].enter.call(null,_enterCallbackEvent);
+							parentStates[k].enter(_enterCallbackEvent);
 						}
 					}
 				}
 				if(_states[_state].enter){
 					_enterCallbackEvent.currentState = _currentState;
-					_states[_state].enter.call(null,_enterCallbackEvent);
+					_states[_state].enter(_enterCallbackEvent);
 				}
 			}
 			trace("[StateMachine]",id,"State Changed to " + _currentState);

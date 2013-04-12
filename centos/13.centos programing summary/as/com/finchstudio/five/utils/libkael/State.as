@@ -5,17 +5,34 @@ package com.finchstudio.five.utils.libkael
 		// may be extends and have own enter/exit function
 		public var name:String;
 		public var from:Object;
-		public var enter:Function;
-		public var exit:Function;
 		public var _parent:State;
 		public var children:Array;
+		public var oneshot:Boolean = false;// is one shot state
 		
-		public function State(name:String, from:Object = null, enter:Function = null, exit:Function = null, parent:State = null){
+		// need extends and override this
+		public function enter(param:Object):void{
+		
+		}
+		
+		public function exit(param:Object):void{
+			
+		}
+		
+		// state update function
+		public function update(param:Object):void{
+			
+		}
+
+		// do detail logic to decide need entity or not,
+		// and when enter over,logic finished,we do oneshotcomplete	
+		public function onOneShotComplete():void{
+			// entity.stateStepOver();	
+		}
+		
+		public function State(name:String, from:Object = null ,parent:State = null){
 			this.name = name;
 			if (from==null) from = "*";
 			this.from = from;
-			this.enter = enter;
-			this.exit = exit;
 			this.children = [];
 			if(parent){
 				_parent = parent;
@@ -24,8 +41,10 @@ package com.finchstudio.five.utils.libkael
 		}
 		
 		public function set parent(parent:State):void{
-			_parent = parent;
-			_parent.children.push(this);
+			if(parent){
+				_parent = parent;
+				_parent.children.push(this);
+			}
 		}
 		
 		public function get parent():State{
