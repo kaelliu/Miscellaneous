@@ -13,7 +13,7 @@ package com.finchstudio.five.utils.libkael
 		
 		public function assignAgent(lst:Array,startnow:Boolean=false):void{
 			while(lst.length != 0){
-				_agent._sequence.push(lst.pop());
+				_agent._sequence.push(lst.shift());
 			}
 			
 			if(startnow){

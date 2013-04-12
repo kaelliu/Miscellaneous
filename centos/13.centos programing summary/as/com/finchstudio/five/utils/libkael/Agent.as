@@ -13,7 +13,7 @@ package com.finchstudio.five.utils.libkael
 		private function doOneAgent():void{
 			if(!_isdoing)
 			{
-				var newState:String = _sequence.pop();
+				var newState:String = _sequence.shift();
 				if(newState != null){
 					_entity._fsm.changeState(newState);
 				}

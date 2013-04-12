@@ -12,7 +12,8 @@ package com.finchstudio.five.utils.libkael
 		public var parentState:State;
 		public var parentStates:Array;
 		public var path:Array;
-//		public var state_sequence:Array = null;// state sequence,for show an entire action
+		// entity who have this machine
+		public var _owner:Object;
 		
 		/**
 		 * Creates a generic StateMachine. Available states can be set with addState and initial state can
@@ -60,6 +61,7 @@ package com.finchstudio.five.utils.libkael
 			if(stateName in _states) trace("[StateMachine]",id,"Overriding existing state " + stateName);
 			if(stateData == null) trace("[StateMachine]",id,"add state failed " + stateName);
 			stateData.parent = _states[parent];
+			stateData.owner  = this;
 			_states[stateName] = stateData;
 		}
 		

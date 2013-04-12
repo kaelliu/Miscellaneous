@@ -8,7 +8,8 @@ package com.finchstudio.five.utils.libkael
 		public var _parent:State;
 		public var children:Array;
 		public var oneshot:Boolean = false;// is one shot state
-		
+		// fsm who have this state
+		public var owner:Object;
 		// need extends and override this
 		public function enter(param:Object):void{
 		
@@ -22,12 +23,11 @@ package com.finchstudio.five.utils.libkael
 		public function update(param:Object):void{
 			
 		}
-
-		// do detail logic to decide need entity or not,
-		// and when enter over,logic finished,we do oneshotcomplete	
-		public function onOneShotComplete():void{
-			// entity.stateStepOver();	
-		}
+		
+//		// do detail logic to decide need entity or not,and when enter over,logic finished,we do oneshotcomplete
+//		public function onOneShotComplete():void{
+////			owner._owner.stateStepOver();
+//		}
 		
 		public function State(name:String, from:Object = null ,parent:State = null){
 			this.name = name;
