@@ -136,7 +136,7 @@ package com.finchstudio.five.utils.libkael
 			return [c,d];
 		}
 		
-		public function changeState(stateTo:String):void{
+		public function changeState(stateTo:String,enterExtraParam:Object = null):void{
 			// If there is no state that maches stateTo
 			if (!(stateTo in _states)){
 				trace("[StateMachine]",id,"Cannot make transition: State "+ stateTo +" is not defined");
@@ -194,7 +194,7 @@ package com.finchstudio.five.utils.libkael
 				}
 				if(_states[_currentState].enter){
 					_enterCallbackEvent.currentState = _currentState;
-					_states[_currentState].enter(_enterCallbackEvent);
+					_states[_currentState].enter(enterExtraParam);
 				}
 			}
 			trace("[StateMachine]",id,"State Changed to " + _currentState);
