@@ -43,15 +43,12 @@ package com.finchstudio.five.utils.libkael
 		 *	monsterSM.initialState = "idle"
 		 *	</pre>
 		 */
-		public function StateMachine()
-		{
+		public function StateMachine(){
 			_states = new Dictionary();
 		}
 		
-		public function Update( time:Number ):void
-		{
-			if( _currentState.length != 0 )
-			{
+		public function Update( time:Number ):void{
+			if( _currentState.length != 0 ){
 				trace("[StateMachine]",id,"updating current state " + _currentState);
 				_states[_currentState].update(time);
 			}
@@ -72,9 +69,9 @@ package com.finchstudio.five.utils.libkael
 				var _callbackEvent:StateMachineEvent = new StateMachineEvent(StateMachineEvent.ENTER_CALLBACK);
 				_callbackEvent.toState = stateName;
 				
-				if(_states[_state].root){
-					parentStates = _states[_state].parents;
-					for(var j:int = _states[_state].parents.length-1; j>=0; j--){
+				if(_states[stateName].root){
+					parentStates = _states[stateName].parents;
+					for(var j:int = _states[stateName].parents.length-1; j>=0; j--){
 						if(parentStates[j].enter){
 							_callbackEvent.currentState = parentStates[j].name;
 							parentStates[j].enter(_callbackEvent);
@@ -165,9 +162,9 @@ package com.finchstudio.five.utils.libkael
 				_exitCallbackEvent.toState = stateTo;
 				_exitCallbackEvent.fromState = _currentState;
 				
-				if(_states[_state].exit){
+				if(_states[_currentState].exit){
 					_exitCallbackEvent.currentState = _currentState;
-					_states[_state].exit(_exitCallbackEvent);
+					_states[_currentState].exit(_exitCallbackEvent);
 				}
 				parentState = _states[_currentState];
 				for(var i:int=0; i<path[0]-1; i++){
@@ -195,9 +192,9 @@ package com.finchstudio.five.utils.libkael
 						}
 					}
 				}
-				if(_states[_state].enter){
+				if(_states[_currentState].enter){
 					_enterCallbackEvent.currentState = _currentState;
-					_states[_state].enter(_enterCallbackEvent);
+					_states[_currentState].enter(_enterCallbackEvent);
 				}
 			}
 			trace("[StateMachine]",id,"State Changed to " + _currentState);

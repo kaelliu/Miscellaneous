@@ -17,6 +17,9 @@ package com.finchstudio.five.utils.libkael
 				if(newState != null){
 					_entity._fsm.changeState(newState);
 				}
+				else{
+					_entity._fsm.changeState("idle");
+				}
 				_isdoing = true;
 			}
 		}
