@@ -1,0 +1,9 @@
+1.get a cpp version eclipse,in help->install new software,install goclipse
+http://goclipse.googlecode.com/svn/trunk/goclipse-update-site/
+2.configure the go variable in window->perference
+3.download GoCode to gopath
+https://github.com/nsf/gocode
+and go build it,can find gocode in bin
+4.install mingw for gdb
+5.in eclipse setting gdb/gocode
+6.run test program
