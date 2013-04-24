@@ -1,12 +1,15 @@
 package
 {
-	import flash.display.Sprite;
-	import flash.events.*;
-	import flash.geom.Point;
-	import flash.geom.ColorTransform;
-	import flash.display.Graphics;
+	import com.greensock.TweenMax;
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Graphics;
+	import flash.display.Sprite;
+	import flash.events.*;
+	import flash.geom.ColorTransform;
+	import flash.geom.Point;
+
 	public class HeartCurve extends Sprite
 	{
 		//四种方向心形线
@@ -14,25 +17,17 @@ package
 		//r=a*(1-cos(angle))
 		//r=a*(1+sin(angle))
 		//r=a*(1-sin(angle))
-		private var pen_up:Sprite;
-		private var pen_down:Sprite;
-		private var pen_left:Sprite;
-		private var pen_right:Sprite;
+		private var pen:Sprite;
 		private var bmp:BitmapData;
 		private var n:int=0;//数量
 		private var maxStep:int=100;
 		public function HeartCurve()
 		{
-			pen_up=this.clone();
-			pen_down=this.clone();
-			pen_left=this.clone();
-			pen_right=this.clone();
+			pen=this.clone();
 			
-			addChild(pen_up);
-			addChild(pen_down);
-			addChild(pen_left);
-			addChild(pen_right);
-			
+			addChild(pen);
+			var duration:Number = maxStep * (1/24);// 24 fps,each enterframe cost 1/24 second
+			TweenMax.to(pen, duration, {glowFilter:{color:0xffe600, alpha:1, blurX:30, blurY:30, strength:5, quality:3}});
 			addEventListener(Event.ENTER_FRAME,Run);
 		}
 		
@@ -44,10 +39,7 @@ package
 		private function Run(event:Event):void{
 			if (n<=maxStep)
 			{
-//				drawHeart(pen_up.graphics,n,100,new Point(250,200),"up");
-				drawHeart(pen_down.graphics,n,30,new Point(250,200),"down");
-//				drawHeart(pen_left.graphics,n,100,new Point(250,200),"left");
-//				drawHeart(pen_right.graphics,n,100,new Point(250,200),"right");
+				drawHeart(pen.graphics,n,30,new Point(250,200),"down");
 			}
 			else
 			{
