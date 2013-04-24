@@ -5,9 +5,7 @@ package
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
-	import flash.display.StageAspectRatio;
 	import flash.display.StageScaleMode;
-	import flash.events.Event;
 	
 	import lib.kael.InitScene;
 	

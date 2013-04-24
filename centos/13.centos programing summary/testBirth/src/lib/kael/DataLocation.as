@@ -4,6 +4,11 @@ package lib.kael
 	{
 		public var _cacheList:Object = {};		//保存加载过的图片 bitmap		(单纯的IMAGE)
 		private static var instance:DataLocation = null;
+		
+		public static const videos:Array = [
+			1,2,3
+		];
+		
 		protected function Datalocation()
 		{
 			if ( instance != null )

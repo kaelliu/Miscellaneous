@@ -16,15 +16,14 @@ package lib.kael
 	import flash.sensors.Accelerometer;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	
-	import flashx.textLayout.formats.TextAlign;
+	import flash.text.TextFormatAlign;
 	
 	import myevent.SwitchSceneEvent;
 
 	public class Mainview extends Sprite
 	{
-		var isSupported:Boolean = Accelerometer.isSupported;
-		var _accelerometer:Accelerometer = new Accelerometer();
+		private var isSupported:Boolean = Accelerometer.isSupported;
+		private var _accelerometer:Accelerometer = new Accelerometer();
 		
 		private const THRESHOLD:Number = 1.5;
 		private var _isMeasuring:Boolean = false;
@@ -48,7 +47,7 @@ package lib.kael
 			_text = new TextField;
 			_text.selectable = false;
 			var tmf:TextFormat =new TextFormat();
-			tmf.align = TextAlign.LEFT;
+			tmf.align = TextFormatAlign.LEFT;
 			tmf.color = 0xffffff;
 			tmf.size = 32;
 			_text.defaultTextFormat=tmf;
@@ -94,7 +93,7 @@ package lib.kael
 			}
 		}
 		
-		public function onRemove(e:Event){
+		public function onRemove(e:Event):void {
 			if(_memorySprite)
 				_memorySprite.removeEventListener(TouchEvent.TOUCH_END,handleSelectMemory);
 			if(_videoSprite)
@@ -175,15 +174,20 @@ package lib.kael
 			timeline.play();
 		}
 		
-		private function handleSelectMemory(e:Event){
+		private function handleSelectMemory(e:Event):void {
 			TweenLite.to(_memorySprite,0.25, {scaleX:1, scaleY:1, ease:Circ.easeOut});
 		}
 		
-		private function handleSelectVideo(e:Event){
+		private function handleSelectVideo(e:Event):void {
 			TweenLite.to(_videoSprite,0.25, {scaleX:1, scaleY:1, ease:Circ.easeOut});
+			var addon:VideoView = new VideoView;
+			var event:SwitchSceneEvent = new SwitchSceneEvent(SwitchSceneEvent.SWITCHSCENE_EVENT,true);
+			event.from = this;
+			event.to = addon;
+			dispatchEvent(event);
 		}
 		
-		private function handleSelectAddon(e:Event){
+		private function handleSelectAddon(e:Event):void {
 			TweenLite.to(_addonSprite,0.25, {scaleX:1, scaleY:1, ease:Circ.easeOut});
 			var addon:AddonView = new AddonView;
 			var event:SwitchSceneEvent = new SwitchSceneEvent(SwitchSceneEvent.SWITCHSCENE_EVENT,true);
@@ -192,15 +196,15 @@ package lib.kael
 			dispatchEvent(event);
 		}
 		
-		private function handleTouchMemory(e:Event){
+		private function handleTouchMemory(e:Event):void {
 			TweenLite.to(_memorySprite,0.25, {scaleX:1.2, scaleY:1.2, ease:Circ.easeOut});
 		}
 		
-		private function handleTouchVideo(e:Event){
+		private function handleTouchVideo(e:Event):void {
 			TweenLite.to(_videoSprite,0.25, {scaleX:1.2, scaleY:1.2, ease:Circ.easeOut});
 		}
 		
-		private function handleTouchAddon(e:Event){
+		private function handleTouchAddon(e:Event):void {
 			TweenLite.to(_addonSprite,0.25, {scaleX:1.2, scaleY:1.2, ease:Circ.easeOut});
 		}
 	}

@@ -1,14 +1,7 @@
 package lib.kael
 {
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Circ;
-	
-	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
 	
 	import myevent.SwitchSceneEvent;
 

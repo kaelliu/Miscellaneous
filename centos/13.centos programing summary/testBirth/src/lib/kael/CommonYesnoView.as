@@ -18,8 +18,8 @@ package lib.kael
 		private var _no:SimpleButton;
 		public var onYes:Function;
 		public var onNo:Function;
-		var _yesLabel:TextField  = new TextField();
-		var _noLabel:TextField  = new TextField();
+		private var _yesLabel:TextField  = new TextField();
+		private var _noLabel:TextField  = new TextField();
 		public function CommonYesnoView()
 		{
 			_yes = new SimpleButton();   

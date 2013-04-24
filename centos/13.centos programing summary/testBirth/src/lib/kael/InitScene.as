@@ -14,8 +14,7 @@ package lib.kael
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	
-	import flashx.textLayout.formats.TextAlign;
+	import flash.text.TextFormatAlign;
 	
 	import myevent.SwitchSceneEvent;
 	
@@ -37,7 +36,7 @@ package lib.kael
 			_text.selectable = false;
 			_text.filters = [dropFilter];
 			var tmf:TextFormat =new TextFormat();
-			tmf.align = TextAlign.LEFT;
+			tmf.align = TextFormatAlign.LEFT;
 			tmf.color = 0xffffff;
 			tmf.size = 24;
 			_text.defaultTextFormat=tmf;
