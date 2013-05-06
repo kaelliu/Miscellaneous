@@ -16,7 +16,7 @@ package lib.kael
 			{id:2006,desc:"",title:""}
 		];
 
-		protected function Datalocation()
+		public function DataLocation()
 		{
 			if ( instance != null )
 			{

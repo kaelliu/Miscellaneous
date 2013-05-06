@@ -1,13 +1,11 @@
-package
+package lib.kael
 {
 	import com.greensock.TweenMax;
 	
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
-	import flash.events.*;
-	import flash.geom.ColorTransform;
+	import flash.events.Event;
 	import flash.geom.Point;
 
 	public class HeartCurve extends Sprite

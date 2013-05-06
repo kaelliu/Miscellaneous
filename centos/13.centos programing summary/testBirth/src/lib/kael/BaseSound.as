@@ -1,11 +1,9 @@
-﻿package 
+﻿package lib.kael
 {
-	import com.greensock.plugins.VolumePlugin;
+	
+	import com.greensock.TweenLite;
 	
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
@@ -20,14 +18,14 @@
     {
 		
 		private static var instance:BaseSound = null;
-		
+		private var lastSound:Sound = null;
 		private var localSound:Sound = new Sound();
 		private var channel:SoundChannel = new SoundChannel();
 		private var pausePosition:int; 
 		
 		private var playing:Boolean = false;
 		private var playTag:int = 0;
-		
+		private var currentPlaying:String = "";
         public function BaseSound()
         {
 			if(instance!=null)throw new Error("Singlton Error!");
@@ -54,19 +52,29 @@
 		}
 		
 		public function playMusic(id:int):void{
-			if(!DataLocation.getInstance()._isPlayMusic)return;
+//			if(!DataLocation.getInstance()._isPlayMusic)return;
 			var url:String = "../assets/music/"+id+".mp3";
+			if(url == currentPlaying)return;
+			if(currentPlaying.length != 0){
+				lastSound = localSound;
+//				TweenLite.to(localSound, 1, {volume:0});
+			}
+			currentPlaying = url;
 			var req:URLRequest = new URLRequest(url);
 			localSound = new Sound();
 			localSound.addEventListener(Event.COMPLETE, onLoadComplete);
 			localSound.load(req);
-			
+		}
+		
+		public function resetCurrentPlaying():void{
+			currentPlaying = "";
 		}
 		
 		public function stopCurrent():void{
 			channel.stop();
 			playTag = 0;
 			playing = false;
+//			currentPlaying = "";
 		}
 		
 		public function pauseCurrent():void{
@@ -74,29 +82,19 @@
 			playing = false;
 		}
 		
-		public function start():void
-		{
-		}
-		
 		private function onLoadComplete(event:Event):void
 		{
 			localSound.removeEventListener(Event.COMPLETE, onLoadComplete);
+			stopCurrent();
 			playing = true;
 			channel = localSound.play(0,int.MAX_VALUE);
 			channel.soundTransform.volume = 0.4;
+//			TweenLite.to(localSound, 1, {volume:1});
 		}
 		
 		public function isPlaying():Boolean
 		{
 			return playing;
-		}
-		
-		public function playSound():void
-		{
-			if(!BaseSound.getInstance().isPlaying())
-			{
-				
-			}
 		}
     }
 }

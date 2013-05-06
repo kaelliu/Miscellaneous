@@ -1,4 +1,4 @@
-package
+package lib.kael
 {	
 	import com.greensock.TweenMax;
 	import com.greensock.easing.Circ;
@@ -7,30 +7,34 @@ package
 	import com.greensock.loading.VideoLoader;
 	
 	import flash.display.Loader;
-	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
 
-	[SWF(backgroundColor = 0xffffff, width = 1024, height = 650, frameRate = 30)]
 	public class VideoPlayerView extends Sprite
 	{
-		var loader:Loader = new Loader();
-		var pl:Player;
+		private var loader:Loader = new Loader();
+		private var pl:Player;
 		private var video:VideoLoader;// current video
 		public var queue:LoaderMax;
 		public function VideoPlayerView()
 		{
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadComplete);
-			loader.load(new URLRequest("../assets/player.swf"));
+			loader.load(new URLRequest("../assets/swf/player.swf"));
+		}
+		
+		public function onQuit():void{
+			video.unload();
+			queue.unload();
 		}
 		
 		private function loadComplete(evt:Event):void
 		{
 			pl = evt.target.content;
+			pl.x = 10;
+			pl.y = 10;
 			this.addChild(pl);
 			initUI();
 		}
@@ -46,7 +50,7 @@ package
 			pl.controlUI_mc.scrubber_mc.x = pl.controlUI_mc.progressBar_mc.x;
 			TweenMax.allTo([pl.controlUI_mc, pl.playPauseBigButton_mc, pl.preloader_mc], 0, {autoAlpha:0});
 			
-			video = new VideoLoader("../assets/1.flv",{onProgress:progressHandler});
+			video = new VideoLoader("../assets/flv/1.flv",{onProgress:progressHandler});
 			video.load();
 			queue = new LoaderMax({name:"mainQueue",onComplete:completeHandler, onError:errorHandler});
 			queue.skipPaused = true;
@@ -285,7 +289,7 @@ package
 			return;
 		}// end function
 		
-		private function playOver():void{
+		private function playOver(e:Object):void{
 			
 		}
 		

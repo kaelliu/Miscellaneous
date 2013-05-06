@@ -176,6 +176,11 @@ package lib.kael
 		
 		private function handleSelectMemory(e:Event):void {
 			TweenLite.to(_memorySprite,0.25, {scaleX:1, scaleY:1, ease:Circ.easeOut});
+			var mem:MemoryView = new MemoryView;
+			var event:SwitchSceneEvent = new SwitchSceneEvent(SwitchSceneEvent.SWITCHSCENE_EVENT,true);
+			event.from = this;
+			event.to = mem;
+			dispatchEvent(event);
 		}
 		
 		private function handleSelectVideo(e:Event):void {

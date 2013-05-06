@@ -27,28 +27,25 @@
 * Please, keep this header and the list of all authors
 * 
 */
-package {
+package lib.kael{
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.Sprite;
-	import flash.display.MovieClip;
-	import flash.display.Stage;
-	import flash.display.Loader;
-	import flash.display.Shape;
 	import flash.display.GradientType;
+	import flash.display.Loader;
+	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.display.SpreadMethod;
-
-	import flash.geom.Point;
-	import flash.geom.Matrix;
-	import flash.filters.DropShadowFilter;
-	import flash.net.URLRequest;
-	import flash.utils.Timer;
-	import flash.utils.*;
-
+	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
+	import flash.filters.DropShadowFilter;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.net.URLRequest;
+	import flash.utils.Timer;
 
 	public class PageFlipClass {
 		//可设置或可调用接口,页数以单页数计算~---------------------------------------
