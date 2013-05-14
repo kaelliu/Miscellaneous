@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="lib.kael.CommonDao">
+	<resultMap type="lib.kael.CaseInsensitiveMap" id="CommonResultMap">
+	</resultMap>
+    <select id="Query" parameterType="java.util.HashMap" resultMap="CommonResultMap">
+    	select ${fields} from ${tbl} 
+    	<if test="condition != null">
+			where ${condition} 
+		</if>
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if> 
+		<if test="limit != null">
+			limit ${limit}
+		</if> 
+    </select>
+    <update id="Update" parameterType="java.util.HashMap">
+    	update ${tbl} Set ${data} 
+		<if test="condition != null">
+			where ${condition} 
+		</if>
+    </update>
+    <delete id="Delete" parameterType="java.util.HashMap">
+    	delete from ${tbl} 
+    	<if test="condition != null">
+			where ${condition} 
+		</if>
+    </delete>
+    <insert id="Insert" parameterType="java.util.HashMap">
+    	insert into ${tbl} (${fields}) values(${value}) 
+    	<if test="onDuplicate != null">
+			ON DUPLICATE KEY ${onDuplicate} 
+		</if>
+		<selectKey keyProperty="id" resultType="int">SELECT @@IDENTITY AS id</selectKey>
+    </insert>
+    <insert id="Replace" parameterType="java.util.HashMap">
+    	replace into ${tbl} (${fields}) values(${value})
+    </insert>
+    <select id="Count" parameterType="java.util.HashMap" resultType="int">
+    	select count(1) as c from ${tbl}
+    	<if test="condition != null">
+			where ${condition} 
+		</if>
+    </select>
+</mapper>

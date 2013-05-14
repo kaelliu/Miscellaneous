@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<!-- in spring 3.0 remember to add ignore-unresolvable=true if you have more than one property-placeholder -->
+	<context:property-placeholder location="classpath:resources/mysql.properties" ignore-unresolvable="true"/>
+	<bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property  name ="delegateProperties" > 
+             <value>user=${jdbc.username},password=${jdbc.password}</value> 
+        </property> 
+		<property name="driver" value="${jdbc.driverClassName}"></property>
+        <property name="driverUrl" value="${jdbc.url}"></property>
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="houseKeepingTestSql"  value ="select CURRENT_DATE" ></property>
+        <property name="maximumConnectionCount" value="2560"></property>
+        <property name="maximumActiveTime" value="600000"></property>
+     	<property name="minimumConnectionCount" value="10"></property>
+     	<property name="simultaneousBuildThrottle" value="1200"></property>
+     	<property name="prototypeCount" value="5"></property>
+	</bean>
+	<bean id="transactionProxy" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+  			<ref bean="dataSource" /> 
+  		</property>
+  	</bean>
+	<bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+  		<property name="transactionManager" ref="transactionProxy" /> 
+ 		<property name="transactionAttributes">
+ 		<props>
+  			<prop key="insert*">PROPAGATION_REQUIRED</prop> 
+  			<prop key="update*">PROPAGATION_REQUIRED</prop> 
+  			<prop key="delete*">PROPAGATION_REQUIRED</prop> 
+  			<prop key="handle*">PROPAGATION_REQUIRED</prop>
+  			<prop key="*">PROPAGATION_REQUIRED,readOnly</prop> 
+  		</props>
+  		</property>
+ 	</bean>
+ 	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">   
+      <constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>  
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:MyBatis-Configuration.xml"></property>
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!-- Logic Dao AND ServiceImpl -->
+    <bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.service.UserDao"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    <bean id="commonDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="lib.kael.CommonDao"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+</beans>

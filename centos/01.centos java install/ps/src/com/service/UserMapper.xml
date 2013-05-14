@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.service.UserDao">
+	<!--cache eviction="LRU" type="lib.kael.MemcachedCache"></cache-->
+	<resultMap type="com.service.UserDto" id="UserDaoResultMap">
+		<id property="uid" column="UID"/>
+		<result property="userName" column="USERNAME"/>
+		<result property = "passwd"   column = "PASSWORD" />  
+	</resultMap>
+	<resultMap type="com.service.UserDetailDto" id="UserDetailDaoResultMap">
+		<id property="uid" column="UID"/>
+		<result property="nm" column="USERNAME"/>
+		<result property = "sex"   column = "SEX" /> 
+		<result property = "icon"   column = "ICON" />  
+	</resultMap> 
+    <select id="login" parameterType="java.util.HashMap" resultType="int" useCache="false">
+    	select count(*) from users where UserName=#{username} and Password=#{password}
+    </select>
+    <select id="login2" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    	select uid from users where UserName=#{username} and Password=#{password}
+    </select>
+    <insert id="register" parameterType="java.util.HashMap">
+    	insert into users(UserName,Password,Sex,Icon,NickName) VALUES(#{username},#{password},#{sex},#{ico},#{nm});
+    	<selectKey keyProperty="uid" resultType="int">SELECT @@IDENTITY AS uid</selectKey>
+    </insert>
+    <!-- flushCache="true" is default for i/d/u statement,false for select statement; if you want change a select statement flush,set the flushCache to true -->
+    <insert id="insertUser" parameterType="java.util.HashMap">
+    	insert into users(UserName,Password) VALUES(#{username},#{password})
+    </insert>
+    <select id="getuid" parameterType="java.lang.String" resultType="int">
+    	select UID from users where UserName=#{value}
+    </select>
+    <select id="checkName" parameterType="java.lang.String" resultType="int" useCache="false">
+        select count(*) from users where UserName=#{value};
+    </select>
+    <select id="countAll" resultType="int">
+        select count(*) from users;
+    </select>
+    <update id="changepasswd" parameterType="java.util.HashMap">
+    	update users Set Password=#{password} where UID=#{uid}
+    </update>
+    <delete id="deleteuser" parameterType="java.lang.Integer">
+    	delete from users where UID=#{id}
+    </delete>
+    <select id="getuserDetail" parameterType="java.lang.Integer" resultMap="UserDetailDaoResultMap">
+    	select username,sex,icon from users where UID=#{id}
+    </select>
+</mapper>

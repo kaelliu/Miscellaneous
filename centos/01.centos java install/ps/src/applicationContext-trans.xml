@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	
+	<!-- 
+	<bean id="recordUpdater" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="com.logic.RecordUpdater">
+				<property name="moneyRecService"><ref bean="moneyRecService" /></property>
+				<property name="numRecService"><ref bean="numRecService" /></property>
+				<property name="foodRecService"><ref bean="foodRecService" /></property>
+				<property name="equipRecService"><ref bean="equipRecService" /></property>
+				<property name="expRecService"><ref bean="expRecService" /></property>
+				<property name="hotelRecService"><ref bean="hotelRecService" /></property>
+				<property name="itemRecService"><ref bean="itemRecService" /></property>
+				<property name="lampRecService"><ref bean="lampRecService" /></property>
+				<property name="trainRecService"><ref bean="trainRecService" /></property>
+				<property name="svRecService"><ref bean="svRecService" /></property>
+				<property name="scoreRecService"><ref bean="scoreRecService" /></property>
+				<property name="rmbRecService"><ref bean="rmbRecService" /></property>
+			</bean>
+		</property>
+	</bean>	
+	 -->
+</beans>
