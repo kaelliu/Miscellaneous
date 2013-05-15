@@ -15,6 +15,8 @@ import lib.kael.CacheCommon;
 import lib.kael.CommonDao;
 import lib.kael.ModelBase;
 import lib.kael.ServerApp;
+import lib.kael.ServerInterface;
+import lib.kael.ShutdownHookThread;
 import lib.kael.TcpNetworkEngine;
 import lib.kael.TimeSyncDbObject;
 import lib.kael.TimeSyncRunnable;
@@ -26,7 +28,7 @@ import com.kael.datastruct.RoleDto;
 import com.kael.timers.SimulateTimer;
 import com.service.RoleModel;
 
-public class PServer
+public class PServer implements ServerInterface
 {
 	public static int PORT=3456;
 	public static Map<Channel,GameRoomData> sessionDatas;		//����gameserver����
@@ -61,6 +63,79 @@ public class PServer
 	private Timer _testTimer;
 	public PServer()
 	{
+		ShutdownHookThread sht = new ShutdownHookThread();
+        sht.add(this);
+        this.start();
+//		Map param = new HashMap();
+//		param.put("tbl", "users");
+//		param.put("fields", "*");
+//		List<Map> abc = ((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Query(param);
+//		long s1 = System.currentTimeMillis();
+//		Random rand = new Random(s1);
+//		UserTestDto utd = new UserTestDto();
+//		Map abcd = abc.get(0);
+//		for(int i=0;i<1000000;i++){
+////			utd.setterFromMap(abc.get(rand.nextInt(abc.size())));
+//			utd.setterFromMap(abcd);
+//		}
+//		
+//		long s2 = System.currentTimeMillis();
+//		System.out.println("cost:"+(s2-s1));
+	}
+	
+	public static void flushToDb(){
+		// if still querying...
+		if(queryingRotation != null)
+			return;
+		// do query rotation
+		queryingRotation = gatherRotation;
+		// switch gather rotation
+		if(gatherRotation == queue)
+			gatherRotation = backup;
+		else if(gatherRotation == backup)
+			gatherRotation = queue;
+		// this will block until work all finish,but if three minutes can not finish all work
+		// if each operation is isolated,can use another thread pool for doing every operation,
+		// but if every operation is related,or time sequence,will block in this one thread
+		Set entrys = queryingRotation.entrySet();
+		{
+			Iterator it = entrys.iterator();
+			while(it.hasNext()) 
+			{
+				Entry entry = (Entry) it.next();
+				TimeSyncDbObject todo = (TimeSyncDbObject) entry.getValue();
+				// these will be block in one thread,seems not good
+//				if(todo.type == TimeSyncDbObject.I){
+//					((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Insert(todo.data);
+//				}else if(todo.type == TimeSyncDbObject.D){
+//					((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Delete(todo.data);
+//				}else if(todo.type == TimeSyncDbObject.U){
+//					((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Update(todo.data);
+//				}
+				// use executor for instead
+				Runnable task = new TimeSyncRunnable(todo);
+				executor.execute(task);
+			}
+		}
+		
+		// clear finished job
+		queryingRotation.clear();
+		// when finish queryingRotation should be null
+		queryingRotation = null;
+	}
+	
+	public static void main(String []args)
+	{
+		try{
+			new PServer();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void start() {
+		System.out.println("step Do before server init");
 		executor = Executors.newFixedThreadPool(28);
 		ids.set(0);
 		POWEROONTIME = (int) (System.currentTimeMillis()/1000);
@@ -134,71 +209,14 @@ public class PServer
 			_testTimer = new Timer();
 		}
 		_testTimer.schedule(new SimulateTimer(), 0,1000);
-		
-//		Map param = new HashMap();
-//		param.put("tbl", "users");
-//		param.put("fields", "*");
-//		List<Map> abc = ((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Query(param);
-//		long s1 = System.currentTimeMillis();
-//		Random rand = new Random(s1);
-//		UserTestDto utd = new UserTestDto();
-//		Map abcd = abc.get(0);
-//		for(int i=0;i<1000000;i++){
-////			utd.setterFromMap(abc.get(rand.nextInt(abc.size())));
-//			utd.setterFromMap(abcd);
-//		}
-//		
-//		long s2 = System.currentTimeMillis();
-//		System.out.println("cost:"+(s2-s1));
 	}
-	
-	public static void flushToDb(){
-		// if still querying...
-		if(queryingRotation != null)
-			return;
-		// do query rotation
-		queryingRotation = gatherRotation;
-		// switch gather rotation
-		if(gatherRotation == queue)
-			gatherRotation = backup;
-		else if(gatherRotation == backup)
-			gatherRotation = queue;
-		// this will block until work all finish,but if three minutes can not finish all work
-		// if each operation is isolated,can use another thread pool for doing every operation,
-		// but if every operation is related,or time sequence,will block in this one thread
-		Set entrys = queryingRotation.entrySet();
-		{
-			Iterator it = entrys.iterator();
-			while(it.hasNext()) 
-			{
-				Entry entry = (Entry) it.next();
-				TimeSyncDbObject todo = (TimeSyncDbObject) entry.getValue();
-				// these will be block in one thread,seems not good
-//				if(todo.type == TimeSyncDbObject.I){
-//					((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Insert(todo.data);
-//				}else if(todo.type == TimeSyncDbObject.D){
-//					((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Delete(todo.data);
-//				}else if(todo.type == TimeSyncDbObject.U){
-//					((CommonDbService) ServerApp.getInstance().m_context.getBean("commonService")).Update(todo.data);
-//				}
-				// use executor for instead
-				Runnable task = new TimeSyncRunnable(todo);
-				executor.execute(task);
-			}
-		}
-		
-		// clear finished job
-		queryingRotation.clear();
-		// when finish queryingRotation should be null
-		queryingRotation = null;
-	}
-	
-	public static void main(String []args)
-	{
-		try{
-			new PServer();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+
+	@Override
+	public void stop() {
+		// things do before stop server
+		System.out.println("step Close tcp listening doing when close server..");
+		System.out.println("step Flush db doing when close server..");
+		System.out.println("step Clear Exist cache doing when close server..");
+		flushToDb();
 	}
 }
