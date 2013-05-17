@@ -19,18 +19,24 @@ public class JedisCache implements CacheCommon{
 	public void putObject(Object key, Object value) {
 		Jedis peer = JedisClientManager.getInstance().getJedisClientPeer();
 		peer.set((String) key, handleInData(value));
+		JedisClientManager.getInstance().returnResource(peer);
 	}
 
 	@Override
 	public Object getObject(Object key,Class<?> cls) {
 		Jedis peer = JedisClientManager.getInstance().getJedisClientPeer();
-		return handleOutData(peer.get((String) key),cls);
+		Object result = handleOutData(peer.get((String) key));
+		JedisClientManager.getInstance().returnResource(peer);
+		return result;
+		
 	}
 
 	@Override
 	public boolean hasKey(Object key) {
 		Jedis peer = JedisClientManager.getInstance().getJedisClientPeer();
-		return peer.exists((String) key);
+		boolean exist = peer.exists((String) key);
+		JedisClientManager.getInstance().returnResource(peer);
+		return exist;
 	}
 
 	@Override
@@ -39,6 +45,7 @@ public class JedisCache implements CacheCommon{
 		String[] keys = new String[1];
 		keys[0]=(String) key;
 		peer.del(keys);
+		JedisClientManager.getInstance().returnResource(peer);
 		return null;
 	}
 
@@ -87,7 +94,9 @@ public class JedisCache implements CacheCommon{
 	public boolean hasKeyLike(Object key) {
 		Jedis peer = JedisClientManager.getInstance().getJedisClientPeer();
 		Set<?> keys = peer.keys((String) key);
-		return keys.size()>0;
+		boolean has = keys.size()>0;
+		JedisClientManager.getInstance().returnResource(peer);
+		return has;
 	}
 
 	@Override
