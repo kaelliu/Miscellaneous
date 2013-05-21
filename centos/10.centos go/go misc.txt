@@ -1,0 +1,26 @@
+﻿1.workplace任务目录下
+bin
+ |--
+pkg
+ |--platform-bitly-go-simplejson.a
+            -otherlib-otherlib.a
+src
+ |-- github.com-bitly-go-simplejson
+ |-- myproj-main
+           -glua
+           -otherlib
+引用包名import "glua" or import gsj "github.com/bitly/go-simplejson"
+2.about gopath
+gopath的作用是告诉Go 命令和其他相关工具，在那里去找到安装在你系统上的Go包。最好不要无包名。
+3.go install/go build/go get
+go install会生成1里提到的文件夹结构，非main包的会打包成.a
+go build会在目录里构建可执行文件
+go get会获取远程包，1.1里需要有gopath,并且不能是goroot.获取后一样是bin/pkg/src结构
+4.cgo
+1).嵌入代码方式，import "c",前面注释中写代码
+2).导入其他C库，例如luajit.
+a.库路径 #cgo LDFLAGS: -L/usr/path -lluajit-5.1
+b.包含头文件路径 #cgo CFLAGS: -I/usr/path
+c.在ubuntu下，安装luajit,apr_pools等，会装到usr/local/lib目录，在/etc/ld.so.conf文件可以加上这个目录后sudo /sbin/ldconfig -v
+来使库路径生效，cgo编译的时候可见
+d.你自己的库类似gcc mylibs.c -fPIC -shared -o libmylib.so -llua来做成.so文件
