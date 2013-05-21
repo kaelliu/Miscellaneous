@@ -25,3 +25,5 @@ b.包含头文件路径 #cgo CFLAGS: -I/usr/path
 c.在ubuntu下，安装luajit,apr_pools等，会装到usr/local/lib目录，在/etc/ld.so.conf文件可以加上这个目录后sudo /sbin/ldconfig -v
 来使库路径生效，cgo编译的时候可见
 d.你自己的库类似gcc mylibs.c -fPIC -shared -o libmylib.so -llua来做成.so文件
+e.benchmark game org 中binary tree的几个版本测试，纯go的85s,go+cgo的嵌入c代码13s,纯c的11s,差距是有，
+但是还是要看算法的应用场景来决定是不是要用cgo
