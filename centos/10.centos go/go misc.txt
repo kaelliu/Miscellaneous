@@ -1,4 +1,4 @@
-﻿1.workplace任务目录下
+﻿1.workplace任务目录下,mygosrc.xml是自己用的liteide的一个配置,build改成了直接install
 bin
  |--
 pkg
@@ -10,6 +10,7 @@ src
            -glua
            -otherlib
 引用包名import "glua" or import gsj "github.com/bitly/go-simplejson"
+或者采用goserver01/install文件，每次执行一下脚本。
 2.about gopath
 gopath的作用是告诉Go 命令和其他相关工具，在那里去找到安装在你系统上的Go包。最好不要无包名。
 3.go install/go build/go get
