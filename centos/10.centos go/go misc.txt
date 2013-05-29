@@ -13,6 +13,9 @@ src
 或者采用goserver01/install文件，每次执行一下脚本。
 2.about gopath
 gopath的作用是告诉Go 命令和其他相关工具，在那里去找到安装在你系统上的Go包。最好不要无包名。
+例如go install github.com/go-mysql-driver/mysql 会安装在GOPATH/src/github.com/go-mysql-driver/mysql,同样编译完的会在GOPATH/pkg
+自己做的项目例如 com.kael/testsuit/main同理放在 GOPATH/src目录，编译的时候go install com.kael/testsuit/main
+实现的install脚本在此目录中的install_k.sh,此文件需要放在com.kael/testsuit/目录，即代码包外层目录
 3.go install/go build/go get
 go install会生成1里提到的文件夹结构，非main包的会打包成.a
 go build会在目录里构建可执行文件
