@@ -1,0 +1,87 @@
+﻿都在ubuntu下做的，记得加sudo不然很多权限问题
+
+PHP 中操作memcache有两个扩展，一个叫memcache,一个叫memcached都可以在php的reference中找到，现在
+
+网上比较推荐使用基于libmemcahced 库的memcached扩展。支持memcache提供的CAS操作，稳定性和效率也更好。
+
+安装方法如下：
+
+安装所要软件
+
+wget http://launchpad.net/libmemcached/1.0/0.42/+download/libmemcached-0.42.tar.gz
+
+wget http://pecl.php.net/get/memcached-1.0.2.tgz
+
+memcached的官方网站 http://www.memcached.org/
+
+安装libmemcached
+
+tar zxvf libmemcached-0.42.tar.gz
+cd libmemcached-0.42
+./configure -prefix=/usr/local/libmemcached  -with-memcached
+sudo make 
+sudo make install
+
+php的扩展memcached的安装
+
+tar zxvf memcached-1.0.2.tar.gz
+cd memcached-1.0.2
+/usr/bin/phpize (your phpize localtion)
+./configure -enable-memcached -with-php-config=/usr/bin/php-config -with-libmemcached-dir=/usr/local/libmemcached -prefix=/usr/local/phpmemcached  -with-memcached
+sudo make 
+sudo make install
+
+vi /etc/php5/fpm/php.ini
+
+加上extension=memcached.so重起一下服务就可以了
+
+
+REDIS:
+
+下载phpredis
+sudo wget http://open.imop.us/pr.tar.gz
+
+tar zxvf pr.tar.gz
+
+cd your_pr_dir
+
+phpize //这个phpize是安装php模块的
+
+如果没有phpize，则需要先安装php5-dev sudo apt-get install php5-dev
+
+./configure
+
+sudo make
+
+sudo make install
+
+修改php.ini文件
+extension=redis.so
+
+重启php-fpm
+
+
+
+CURL:
+
+先查看自己的php5是否已经安装了curl。方法如下：
+1.在web服务器目录（ Ubuntu下的通常为 /var/www )新建test.php文件
+2.编辑文件，键入下面一行代码：
+<?php phpinfo(); ?>
+3.保存文件
+4.打开浏览器，浏览该网页。（例如：http://localhost/test.php)
+5.搜索"curl",看看是否已经安装了curl。没搜到的话肯定是没装了，要装的请看下面。
+
+安装方法很简单，只需要一条命令。（这里选择直接apt-get安装，因为比起自己编译简单多了，不需要自己配置什么）
+
+# sudo apt-get install curl libcurl3 libcurl3-dev php5-curl
+
+PHP5 cURL安装完毕。记得重启服务器
+
+# sudo /etc/init.d/php5-fpm restart
+
+如果仍然有问题，尝试编辑你的php.ini文件（我的是/etc/php5/apache2/php.ini),在最后加上一行：
+
+extension=curl.so
+
+保存文件后重启服务器。

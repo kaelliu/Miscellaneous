@@ -1,0 +1,29 @@
+1.datastruct
+
+2.logic implement
+
+3.base module
+1).user
+create/modify
+lv,progress,coin,uid,exp,rp,name
+2).user package
+id,itemid,count
+3).user farm
+id,uid,status(1-empyt,2-planted no receive,3-planted received,4-wait for takeoff),farmStatus(1-bugged,0-none),plantedTime,rank(levelup ground)
+4).user friend list
+id,myuid,fuid
+5).static config -> in memory or in db?
+plantid,name,canplant_level,got_exp,got
+
+module detail
+user:create/get/delete/update user
+package:create/get/getAllofOneUser/update pack
+plant:create/get/getAllofUser/cropOperation(clean,receive,plant)
+
+
+need to be done:
+1.get user all info - package info/plant info/user info
+2.create user -> create 16 packages/5 plants for user
+3.friend relation,steal/help
+
+need more conclusion

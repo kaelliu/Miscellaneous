@@ -1,0 +1,36 @@
+﻿在Ubuntu下用eaccelerator加速php性能
+
+eaccelerator的安装很简单,只是在ubuntu下需要装php5-dev这个包
+apt-get install php5-dev
+
+然后才可以找到/usr/bin/phpize这个命令
+
+eaccelerator程序可以到http://eaccelerator.net/ 下载
+
+wget http://internap.dl.sourceforge.net/sourceforge/eaccelerator/eaccelerator-0.9.5.tar.bz2
+
+tar jxvf eaccelerator-0.9.5.tar.bz2
+cd eaccelerator-0.9.5
+export PHP_PREFIX=”/usr”
+$PHP_PREFIX/bin/phpize
+./configure \
+–enable-eaccelerator=shared \
+–with-php-config=$PHP_PREFIX/bin/php-config
+make
+make install
+装好后修改php.ini文件,文件应该在这里:/etc/php5/apache2/php.ini
+在最顶部增加下面内容
+
+extension=”eaccelerator.so”
+eaccelerator.shm_size=”16″
+eaccelerator.cache_dir=”/tmp/eaccelerator”
+eaccelerator.enable=”1″
+eaccelerator.optimizer=”1″
+eaccelerator.check_mtime=”1″
+eaccelerator.debug=”0″
+eaccelerator.filter=””
+eaccelerator.shm_max=”0″
+
+从phpinfo()函数所显示的信息中应该可以看到如下内容
+
+eAccelerator v0.9.5, Copyright (c) 2004-2004 eAccelerator, by eAccelerator

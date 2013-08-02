@@ -1,0 +1,416 @@
+﻿1.人员类型
+T/DPS/HEALER/MIXER
+2.队伍
+角色
+role{
+id/                id
+type/              类别
+majorProperty/     主属性
+secondaryProperty/ 次级属性
+bufflist(hashtable(id(buffid,lastround)))/     BUFF列表
+hateTarget(hashtable(id(who),hateval(value)))  仇恨目标
+}
+
+角色属性
+主属性majorProperty 血、力、敏、智
+次级属性secondaryProperty 爆，闪，招
+圆桌：次级属性百分比超出100%的部分将失效
+
+buff{
+id             id
+buff_or_nerf   增或减
+dot_or_persist 持续性每回合作用或一次性持久作用
+targetproperty 属性
+value          属性值
+leftround      剩余回合
+//instant_harm   即时伤害 
+}
+
+buffShield extends buff{
+remainAbsorbHarmValue
+lv
+fantan_shanghai
+}
+
+主动技能/被动技能(当做永久BUFF)/特殊技能(需要实现特定逻辑)
+死亡技能
+
+技能冷却回合数
+
+技能
+技能数据
+skillData
+
+skill{
+id
+buffids
+condition   释放条件
+effectZone  作用范围
+instant_harm
+harm_type
+// use callback for ioc
+on_conditionCheckCallback
+on_effectzoneCheckCallback
+on_takeEffectLogicCallback
+
+}
+
+攻击类型
+attacktype{
+type   物理攻击或者是法术攻击或者是神圣攻击
+prop   攻击附加属性
+}
+
+3.流程
+Round回合,每个回合表示所有的队员顺序出手完毕为1个round
+roundstack{
+round_no
+actionSequence          queue<action>
+}
+Action行动,每个队员每一次出手的行为为一次action
+
+action{
+source_ids list<attackerDetail>  发动方ID
+target_ids list<defenderDetail>  目标方ID
+}	
+
+action模式 
+A+C->B,A->B,A->B+C
+
+actionDetail行为细化
+attackerDetail{
+sid	    发动方ID
+actionType  动作类别 远程,近战,闪现,读条,反击，反弹伤害，死亡技
+skillid     使用的技能ID
+buff_add_or_del
+}
+
+defenderDetail{
+did	     id
+attackEffect 攻击特效 暴击,破击
+attackValue  攻击值 正数加血，负数减血
+defendEffect 防御特效 躲闪，招架，免伤，吸收
+deadEffect   死亡特效 --- 由服务器触发转换为一种action
+buff_add_or_del 加减buff
+}
+
+buff刷新
+每轮buff刷新，DOT/PERSIST的.
+
+特殊技能
+1.消耗全部HP-1，对单体造成10万*maxhp点伤害
+2.每回合对周围3*3格的敌对单位造成攻击力*0.78的伤害
+3.强制隐身躲避一切攻击3回合，BUFF结束时受到的伤害是平常的3倍，将持续1回合
+4.过量治疗将转为攻击，溅射给正前方3*3格子内的敌对单位分摊
+死亡技能
+1.当受到致死攻击时能够有1次机会令HP为1,冷却15回合
+2.死亡时给击杀者周围3格的敌对单位增加一个尸腐DEBUFF，每回合失去最大血量的3%，持续3回合
+3.死亡时在周围十字格子内开启天使的庇护，每回合为在格子内的队员回复血量，如果是敌方单位无效，持续2回合
+4.
+BUFF技能
+属性增加
+伤害DOT
+盾刺,反射伤害的30%给攻击者
+攻击反弹
+法术反射盾，反射法术伤害的20%*skillLevel(最高级为100%)给攻击者
+吸收 
+吸收转回复
+复仇之力,受到伤害越多,增加攻击越多
+视死如归,剩余血量越少,增加攻击越多
+
+领导者技能
+活力,全员总血量80%以上时增加25%攻击
+泥泞,对方移动速度降低
+潜伏者之雾,
+战鼓,暴击率提高15%
+
+组合技能
+
+
+
+BUFF处理流程-决定出手顺序-单体攻击OR组合攻击
+                           |-单体处理流程-怒气值是否足够放技能-技能处理流程
+                                            |-普通攻击处理流程
+
+
+c语言实现伪码
+
+struct role{
+mainskill[2];
+passiveskill;
+leaderskill;
+rage;
+hp;
+int;
+pow;
+dex;
+func ondead; -- dead skill and check battle over
+
+temproleshadow() 属性，非永久加成的
+}
+struct skill{}
+struct buff{}
+struct team{}
+struct fight{
+list(round);
+}
+struct round{
+list(action);
+}
+struct action{
+sources attackerDetail[];
+targets defenderDetail[];
+}
+actionDetail行为细化
+attackerDetail{
+sid	    发动方ID
+actionType  动作类别 远程,近战,闪现,读条,反击，反弹伤害，死亡技
+skillid     使用的技能ID
+buff_add_or_del
+}
+
+defenderDetail{
+did	     id
+attackEffect 攻击特效 暴击,破击
+attackValue  攻击值 正数加血，负数减血
+defendEffect 防御特效 躲闪，招架，免伤，吸收
+deadEffect   死亡特效 --- 由服务器触发转换为一种action
+buff_add_or_del 加减buff
+}
+
+int isover(){
+if(me.length == 0)
+    return other.id;
+else if(other.length == 0)
+    return me.id;
+else
+    return 0;
+}
+void getNewAttackSequence(side1,side2 []role){}
+
+
+fight enterFight(myid,targetid){
+// data getting and prepare..
+me=db.getMyTeamData(myid);
+other=db.getTargetTeamData(targetid);
+
+// or 
+warunit = getWarUnitmap(myid,targetid) // if have three or four side?
+warunit[1]=me
+warunit[2]=other
+/////////////////////////////////////////
+// war global
+// if dead man can revive
+deadTeammateMe=array();
+deadOtherTeammate=array();
+int winaid=0;
+bool draw=false;
+int currentround=0;
+int currentActionIndex;
+int currentActionSide;
+/////////////////////////////////////////
+// logic loop
+while(!(winaid==isover())){
+
+// do round work
+if(needRearrangeAttackSequence){
+    // 
+    // index -> struct{side,slot}
+    roles = array() -- different between game type,if one sideover and next side goes on ,this will change,so need a plugin
+    roles = getNewAttackSequence()   --- be plugin,can change algothrim
+    curentActionIndex = getNextMover(); -- adjust index position,loopback
+}
+// take current move people
+for(currentActionIndex = 0;currentActionIndex<roles.size();currentActionIndex++){
+role = warunit[roles[currentActionIndex].side][roles[currentActionIndex].slot];
+processBuff(&role); // check buff valid,移除，限制技处理，晕
+pickupSkillProcess(&role);// skill will do more detail
+// in oo
+role will be a template method such as 
+role.processRound() -- step01,step02,step03...can be change here
+
+role have skill -- 
+like
+role{
+roleskill rs;
+normalattack na;
+special_attack sa;
+
+onOneAction(){
+...
+rs.process();// 
+}
+}
+
+role{
+IActionCommon iac;
+onOneAction(){
+iac.getDataTemplate();
+iac.checkCondition() // 
+iac.checkTarget() // if auto war
+iac.dobuff() // data addon,logic(盾反，盾吸，免伤)   getbuff().dobufflogic(); 数据处理，自己的/被攻击目标的，被动技能初始化时挂上永久BUFF
+// 对己方治疗消去有害BUFF的
+iac.dopreadd() // 爆闪挡
+//iac.dotargetCompute()// 被攻击者被动技能加数值的，被挂BUFF立即生效
+iac.doformula() // 汇总数值伤害计算,公式嵌入
+iac.doafter() // 死亡技能，仇恨刷新等,睡被攻击后打醒??? 标记死亡，移动出攻击队列等
+iac.outputOneAction()
+}
+}
+
+// 攻击作为技能ID为0的skill只有instant_harm
+NormalAttack extends IActionCommon
+SkillAttack extends IActionCommon{
+skillData sd;
+}
+
+skillData{
+blabla
+func harmformula_callback(source,target);
+}
+
+// how to configurable,generatable!
+logicClass{
+int formu001(obj,obj2){
+return obj.phy*obj.lv-obj2.def;
+}
+}
+
+
+bufflogic{
+special01(obj1){
+if(obj1.atk>100){
+obj1.hp-=3000;
+}
+}
+}
+
+// 策略模式拯救地球？
+
+buffContext{
+buffStrategyInterface* bsi;
+}
+
+buffstaticData{
+blabla;
+callbackclassname string -- reflect.findclass(callbackclassname)--class information can be save in memory for static will be good!
+
+}
+// ??
+BuffContext{
+buffstaticData bd;
+buffStrategyInterface* bsi;
+// need a route rule to concrete new strategy
+bsi = findstaticclasstable(bd.callbackclassname);
+onLogic(obj){
+bsi.onLogic(obj,bd);
+}
+
+}
+
+buffStrategyInterface{
+ onLogic(obj,buffdata);
+}
+
+buffStrategyNormal implements buffStrategyInterface{
+    onLogic(obj){
+        input -> change obj
+        obj.buffaddpool.addHpByValue=100;
+    }
+}
+
+buffFactory{
+ static getBuffEntity(buffid){
+    return new buffcontext(staticData.getBuffStatic(buffid))
+ }
+}
+
+iac.dobuff(){
+buffFactory.getBuffEntity(buffid).onLogic(obj)
+}
+
+factory.getSkill(skillId){
+SD = getFromstaticData(skillId);
+SD.harmformula_callback = formulate.get(skillid);
+}
+
+SpecialAttack extends IActionCommon
+
+SkillAttack.getDataTemplate(){
+    skillStaticData = SkillFactory.getSkill(skillID)
+}
+
+like this can be ioc?
+switcher{
+toggle()
+light{
+turn_on()
+turn_off()
+}
+}
+
+more light -- bulblight extends light
+but if a door have a swither,we cannot simply change light to door
+
+so ioc use interface
+switcher{
+have a itoggler
+}
+itoggler{
+have turn_on/turn_off
+}
+light/door extends from that
+
+and control switched,entity rely on interface itoggler
+开关从依赖设备这种情况，变成了，设备反过来依赖于开关所定义的接口。
+
+角色行为依赖普通攻击，技能攻击，XX攻击方式等具体的模式，变成，行为反过来依赖角色定义的接口
+
+///////////////////////////////
+
+// in 面向过程
+roleTake();
+sk=chooseskill(id);
+// dummy asshole
+if(skillid == 1234 && skillid=1235){
+  damageformula01();
+}else if...
+/////////////////////////////
+// example callbackfunction
+int damageformula01();
+struct sk1;
+sk1.callback = damageformula01
+struct sk2.callback = damageformula01;
+/////////////////////////////
+// in script
+sk1.onskill=luaload('logicskill01.lua');
+/////////////////////////////
+
+sk.eventcallback(param); 
+output();
+
+//////////
+}
+
+
+/////////////////////////////////////////
+
+// go round step 
+currentround++;
+if(currentround > 30){
+    draw = true;
+    break;
+}
+///////////////////////////////////////////
+
+}
+
+// post process
+if(draw){
+}
+else{
+doAfterFight(winnaid);
+}
+//////////////////////////////////////////////
+	
+}
