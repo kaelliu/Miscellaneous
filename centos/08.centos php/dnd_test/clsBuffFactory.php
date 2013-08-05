@@ -5,7 +5,7 @@ class clsBuffFactory {
 	private static $_matchupConfig=array("1"=>1,"2"=>1);
 	final static public function getEntity($buffId){
 		$buffIndex = _matchupConfig[$buffId];
-		$bfcomp = "buffcomp" .  $buffIndex;
+		$bfcomp = "bul" .  $buffIndex;
 		require DIR_BUFFS . "/buff/compute/" . $bfcomp . "php";
 		$staticData =  new clsBuffStaticData();
 		$staticData->id = $buffId;
