@@ -1,5 +1,9 @@
 <?php
 class clsSkillCommonStrategy implements clsSkillComputeStrategy {
+	private function _doBuffAdd($obj,$targets,$sd){
+		
+	}
+
 	public function onHarmFormula($obj,$targets,$sd){
 		// pre compute value
 		foreach($obj->currentTarget as $tar){
