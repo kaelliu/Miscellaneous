@@ -1,4 +1,4 @@
 <?php
 interface clsSkillComputeStrategy {
-	public function onHarmFormula($obj,$targets,$sd);
+	public function onHarmFormula($obj,$fd,$sd);
 }

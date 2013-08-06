@@ -1,10 +1,4 @@
 <?php
-//require_once('common.php');
-// 自动加载
-//spl_autoload_register(array(
-//    "ctlFight",
-//    "autoload"
-//));
 
 class ctlFight {
 	const MAXROUND = 50;
@@ -23,6 +17,7 @@ class ctlFight {
             include $path;
         }
 	}
+
 	public function doFight(){
 		$uid1 = $_REQUEST["u1"];
 		$uid2 = $_REQUEST["u2"];
@@ -38,13 +33,16 @@ class ctlFight {
 			$actioner = $data->getNextMover();
 			$oneAction = new clsRoleBehaviour($actioner);
 			$oneAction->TemplateMethod($data);
-			echo "current in round:".$data->currentRound."<br>";
-			$data->currentRound++;
-			if($data->currentRound >= self::MAXROUND){
-				break;
+		
+			// all move once,next round
+			if($data->currentActionIndex == 0){
+				$data->currentRound++;
+				echo "current in round:".$data->currentRound."<br>";
+				if($data->currentRound >= self::MAXROUND){
+					break;
+				}
 			}
 		}
-
 		echo "fight over!<br>";
 	}
 }

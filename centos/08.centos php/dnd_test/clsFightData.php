@@ -27,9 +27,21 @@ class clsFightData {
 
 	// actully dead,not trigger dead skill
 	public function onRoleDeadCallback($who){
-
+		// move to dead queue
+		$deadTeamMates[$who->slot] = $who;	
+		unset($this->teams[$who->side][$who->slot]);
+		// emit from attackSequence
+		$idx = 0;
+		foreach($this->attackSequence as $val){
+			if($val->slot == $who->slot && $val->side == $who->side){
+				unset($this->attackSequence[$idx]);
+				break;
+			}
+			$idx++;
+		}
 		$this->needRearrangeSequence = true;
 	}
+
 	// get next mover
 	public function getNextMover(){
 		$idx = $this->currentActionIndex;
@@ -73,11 +85,31 @@ class clsFightData {
 		$slot6->hp=800;
 		$slot6->dex=11;
 
-		$attackSide["3"]=$slot1;
-		$attackSide["6"]=$slot2;
-		$attackSide["9"]=$slot3;
-		$attackSide["5"]=$slot4;
-		$attackSide["4"]=$slot5;
+		$slot1->pow=8;
+		$slot2->pow=10;
+		$slot3->pow=11;
+		$slot4->pow=17;
+		$slot5->pow=21;
+		$slot6->pow=299;
+
+
+		$slot1->side="me";
+		$slot2->side="me";
+		$slot3->side="me";
+		$slot4->side="me";
+		$slot5->side="me";
+		$slot6->side="ota";
+		$slot1->slot=3;
+		$slot2->slot=6;
+		$slot3->slot=9;
+		$slot4->slot=5;
+		$slot5->slot=4;
+		$slot6->slot=5;
+		$attackSide[3]=$slot1;
+		$attackSide[6]=$slot2;
+		$attackSide[9]=$slot3;
+		$attackSide[5]=$slot4;
+		$attackSide[4]=$slot5;
 
 		$defendSide["5"]=$slot6;
 		/*

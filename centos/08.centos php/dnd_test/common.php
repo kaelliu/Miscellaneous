@@ -4,7 +4,7 @@ define("DIR_ROOT", dirname(dirname(__FILE__))); // 根目录
 define("DIR_SKILL_LOGIC",DIR_FILE_PATH . "/skill");
 define("DIR_BUFF_LOGIC",DIR_FILE_PATH . "/buff");
 
-// fight system constant type
+// fight system constant type,buff effect
 // "BAOJI" - 1
 // "DUOSHAN" - 2
 // "GEDANG" - 3
@@ -24,6 +24,8 @@ define("DIR_BUFF_LOGIC",DIR_FILE_PATH . "/buff");
 // "FANTAN" - 17
 // "BIZHONG" - 18
 // "POJI" - 19
+// "HARM" - 20
+// "XIXUE" - 21
 
 require('ctlFight.php');
 

@@ -18,6 +18,9 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 	// can take effect on other people
 	public function doProcessBuff(){
 
+		// 检查被动技能产生的永久BUFF,放在BUFF表里
+		
+		// buff逻辑
 		foreach($this->_roleStaticData->buffsOnBody as $buffid=>$lastrounds){
 			// check buff valid or not
 			if($lastrounds - 1 <= 0){
@@ -29,8 +32,6 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 			$buffContext = clsBuffFactory::getEntity($buffid);
 			$buffContext->doLogic($this->_roleStaticData);
 		}
-
-
 	}
 
 	public function doChooseBehaviour(){
@@ -56,8 +57,12 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 	public function doPickUpTarget($team,$usedSkID){
 		if($this->_goesOn){
 			$this->_skillContext = clsSkillFactory::getEntity($usedSkID);
-			if($this->_skillContext && $this->_roleStaticData->currentTarget != null ){
-				$this->_roleStaticData->currentTarget = $this->_skillContext->pickupTarget($team);
+			if($this->_skillContext!=null){
+				$this->_roleStaticData->currentTarget = $this->_skillContext->pickupTarget($this->_roleStaticData,$team);
+				if($this->_roleStaticData->currentTarget == null){
+					$this->_goesOn=false;
+					return;
+				}
 			}else{
 				$this->_goesOn=false;
 				return;
