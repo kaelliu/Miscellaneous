@@ -5,12 +5,16 @@ class clsBuffContext {
 	private $_compute;
 
 	public function __construct($bd,$comp){
-		$_buffStaticData = $bd;
-		$_compute = $comp;
+		$this->_buffStaticData = $bd;
+		$this->_compute = $comp;
 	}
 
-	public function doLogic($obj){
+	public function removeBuff($obj){
+		$this->_comupte->onBuffRemove($obj,$this->_buffStaticData);
+	}
+
+	public function doLogic($obj,$fd,$skid){
 		// do and change obj's detail data
-		$_comupte($obj);
+		$this->_comupte->onBuffLogic($obj,$fd,$this->_buffStaticData,$skid);
 	}
 }

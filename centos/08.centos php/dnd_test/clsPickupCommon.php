@@ -25,6 +25,8 @@ class clsPickupCommon {
 				$result[]=$val;
 			}
 		}else if($sd->effectZone == 2){// 竖排 -- 数组列
+		}else if($sd->effectZone == 7){// 自身
+			$result[]=$rd;
 		}
 		return $result;
 	}

@@ -16,21 +16,23 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 	private $_skillContext;
 	// it need a enemy team here if a buff can effect other one's hp like burning buff on myself 
 	// can take effect on other people
-	public function doProcessBuff(){
-
-		// 检查被动技能产生的永久BUFF,放在BUFF表里
-		
+	public function doProcessBuff($team,$usedSkID){
+		// 触发被动技能给自己挂BUFF的过程在战斗数据初始化
 		// buff逻辑
-		foreach($this->_roleStaticData->buffsOnBody as $buffid=>$lastrounds){
+		foreach($this->_roleStaticData->buffsOnBody as $buffid=>$buffInfo){
+			$buffContext = clsBuffFactory::getEntity($buffid);
 			// check buff valid or not
-			if($lastrounds - 1 <= 0){
-				$lastrounds = 0;
+			if($buffInfo->lastRounds - 1 <= 0){
+				//$lastrounds = 0;
 				// remove it
+				unset($this->_roleStaticData->buffsOnBody[$buffid]);
+				// 1.自动消失,按回合数
+				// 2.主动消失,被攻击后消失或作用 -- 触发
+				$buffContext->removeBuff($this->_roleStaticData);
 				continue;
 			}
-
-			$buffContext = clsBuffFactory::getEntity($buffid);
-			$buffContext->doLogic($this->_roleStaticData);
+			$buffInfo->lastRounds -= 1;
+			$this->_goesOn = $buffContext->doLogic($this->_roleStaticData,$team,$usedSkID);// if stun or somebuff,make role can not move
 		}
 	}
 
@@ -39,6 +41,8 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 		if($this->_goesOn){
 			// global behaviour
 			// 合体技check or more rules
+			// add rage every move
+			$this->_roleStaticData->rage+=10;
 			if($this->_roleStaticData->rage > 100){
 				foreach($this->_roleStaticData->mainskill as $skill){
 					$usedSkID = $this->_roleStaticData->mainskill[$this->_currentSkCursor];

@@ -62,6 +62,43 @@ class clsFightData {
     		return 0;
 	}
 
+	private function _initPassiveSkillBuff($att,$def){
+		foreach($att as $tar){
+			if($tar->passiveSkill != -1){
+				$skd = clsSkillFactory::getSkillStatic($tar->passiveSkill);
+				if($skd != null){
+					foreach($skd->buffs as $buff){
+						// 添加BUFF
+						$buffInfo = new clsBuffFightData;
+						$bd = clsBuffFactory::getBuffStatic($buff);
+						if($bd!=null){
+							$buffInfo->lastRound = $bd->leftRound;
+							$buffInfo->buffAddValue[$bd->targetProperty] = $bd->value;
+							$tar->buffsOnBody[$buff] = $buffInfo;
+						}
+					}
+				}
+			}
+		}
+		foreach($def as $tar){
+			if($tar->passiveSkill != -1){
+				$skd = clsSkillFactory::getSkillStatic($tar->passiveSkill);
+				if($skd != null){
+					foreach($skd->buffs as $buff){
+						// 添加BUFF
+						$buffInfo = new clsBuffFightData;
+						$bd = clsBuffFactory::getBuffStatic($buff);
+						if($bd!=null){
+							$buffInfo->lastRound = $bd->leftRound;
+							$buffInfo->buffAddValue[$bd->targetProperty] = $bd->value;
+							$tar->buffsOnBody[$buff] = $buffInfo;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public function initDataForTest(){
 		$attackSide = array();// slot => roleStaticData
 		$defendSide = array();
@@ -112,6 +149,8 @@ class clsFightData {
 		$attackSide[4]=$slot5;
 
 		$defendSide["5"]=$slot6;
+
+		$this->_initPassiveSkillBuff($attackSide,$defendSide);
 		/*
 		 *   slot map
 		 *   123    123
