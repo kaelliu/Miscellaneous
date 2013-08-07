@@ -12,16 +12,24 @@ class clsSkillFactory {
 		$skcomp = "skl" .  $skillIndex[1];
 		require_once DIR_FILE_PATH . "/skill/condition/". $skcond . ".php";
 		require_once DIR_FILE_PATH . "/skill/compute/" . $skcomp . ".php";
-		$staticData =  new clsSkillStaticData();
-		$staticData->id = $skillId;
-		$staticData->value= self::$_skillStaticData[$skillId]["val"];// blabla
-		$staticData->effectZone=self::$_skillStaticData[$skillId]["ez"];
-		if(isset(self::$_skillStaticData[$skillId]["buff"])){
-			$staticData->buffs=self::$_skillStaticData[$skillId]["buff"];
-		}
 		if (class_exists($skcond) && class_exists($skcomp)){
-			$context = new clsSkillContext($staticData,new $skcomp,new $skcond);
+			$context = new clsSkillContext(self::getSkillStatic($skillId),new $skcomp,new $skcond);
 			return $context;
+		}else{
+			return null;
+		}
+	}
+
+	final static public function getSkillStatic($skillId){
+		if(isset(self::$_skillStaticData[$skillId])){
+			$staticData =  new clsSkillStaticData();
+			$staticData->id = $skillId;
+			$staticData->value= self::$_skillStaticData[$skillId]["val"];// blabla
+			$staticData->effectZone=self::$_skillStaticData[$skillId]["ez"];
+			if(isset(self::$_skillStaticData[$skillId]["buff"])){
+				$staticData->buffs=self::$_skillStaticData[$skillId]["buff"];
+			}
+			return $staticData;
 		}else{
 			return null;
 		}

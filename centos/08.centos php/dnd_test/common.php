@@ -14,7 +14,7 @@ define("DIR_BUFF_LOGIC",DIR_FILE_PATH . "/buff");
 // "ZHILI" - 7
 // "ZUIDAHP" - 8
 // "XUANYUN" - 9
-// "SLEEP" - 10
+// "SHUIJIAO" - 10
 // "JINGTONG" - 11
 // "MINGZHONG" - 12
 // "JISU" - 13
@@ -26,6 +26,30 @@ define("DIR_BUFF_LOGIC",DIR_FILE_PATH . "/buff");
 // "POJI" - 19
 // "HARM" - 20
 // "XIXUE" - 21
+// "ALLMAIN" - 22 全部主属性int/dex/pow
+
+const BAOJI = 1;
+const DUOSHAN = 2;
+const GEDANG = 3;
+const FANJI = 4;
+const LILIANG = 5;
+const MINJIE = 6;
+const ZHILI = 7;
+const ZUIDAHP = 8;
+const XUANYUN = 9;
+const SHUIJIAO = 10;
+const JINGTONG = 11;
+const MINGZHONG = 12;
+const JISU = 13;
+const MIANSHANG = 14;
+const JIANSHANG = 15;
+const XISHOU = 16;
+const FANTAN = 17;
+const BIZHONG = 18;
+const POJI = 19;
+const HARM = 20;
+const XIXUE = 21;
+const ALLMAIN = 22;
 
 require('ctlFight.php');
 

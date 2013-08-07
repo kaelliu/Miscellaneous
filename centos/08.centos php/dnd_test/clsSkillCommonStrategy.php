@@ -1,20 +1,37 @@
 <?php
 class clsSkillCommonStrategy implements clsSkillComputeStrategy {
-	private function _doBuffAdd($obj,$targets,$sd){
-		
+
+	protected function _doBuffAdd($obj,$sd){
+		foreach($sd->buffs as $buffid){
+			$bd = clsBuffFactory::getBuffStatic($buffid);
+			if($bd == null){
+				continue;
+			}
+			// 对自己或者是对目标
+			if($bd->target == 1){// 敌方
+				foreach($obj->currentTarget as $tar){
+					clsBuffCommonStrategy::onBuffAdd($tar,$bd);
+				}
+			}else{
+				clsBuffCommonStrategy::onBuffAdd($obj,$bd);
+			}
+		}	
 	}
 
 	public function onHarmFormula($obj,$targets,$sd){
 		// pre compute value
 		foreach($obj->currentTarget as $tar){
-			// 命中率 = 基础50%命中率 + role.int * 0.8
+			// 预先计算被攻击目标buff的影响
+			// 命中率 = 基础50%命中率 + role.int * 0.8 * (1+buffaddingRate)+buffaddingValue
 			// 是否命中
 			$tar->defendEffect->init();
 			$myHitRate = $obj->int * 0.8 + 50;
 			$x1 = rand(1,100);
 			if($x1 < $myHitRate){// hit
 				// 躲闪率 = role.dex * 0.67 / 100 + buffAdding.duoshan_rate
-				$duoshan = $tar->dex * 0.67 ;//+ $tar->buffAddingValue[DUOSHAN];
+				$duoshan = $tar->dex * 0.67 ;
+				// 获得最终值
+				// $duoshan = $target->getEffectedFinValue($duoshan,DUOSHAN);
 				$x2 = rand(1,100);
 				if($x2 < $duoshan){ // enemy duoshan
 					// 必中率 = 100% for now
@@ -81,5 +98,23 @@ class clsSkillCommonStrategy implements clsSkillComputeStrategy {
 				$tar->defendEffect->fanji = true;
 			}
 		}
+	}
+	
+	public function beHitBuffTrigger($attacker,$fd,$target){
+		// 盾反,吸血,免伤
+	}
+
+	public function fanjiFormula($obj,$fd,$tar){
+		if($tar->defendEffect->fanji){
+			$harm2 = ($tar->pow * 1.23);
+			$obj->hp-=$harm2;
+			// command record,use echo here for temp
+			echo 'side:'.$tar->side.' opSlot '. $tar->slot . ' fanji,hit slot '. $obj->slot . ' for:' . $harm2 . '<br>';
+			if($obj->hp<=0){
+				$fd->onRoleDeadCallback($obj);
+				return false;// attacker dead,do not do next logic
+			}
+		}
+		return true;
 	}
 }

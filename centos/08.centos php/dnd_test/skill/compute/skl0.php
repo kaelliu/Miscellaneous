@@ -8,6 +8,7 @@ class skl0 extends clsSkillCommonStrategy {
 		// step 01 normal
 		// formula = pow * 1.23
 		parent::onHarmFormula($obj,$fd,$sd);	
+		// 攻击行为step
 		foreach($obj->currentTarget as $tar){
 			if($tar->defendEffect->hit){
 				$pow = $obj->pow;//+ $obj->buffAddingValue["POW"];
@@ -21,17 +22,7 @@ class skl0 extends clsSkillCommonStrategy {
 			}
 			if($tar->hp<=0){
 				$fd->onRoleDeadCallback($tar);
-			}
-			if($tar->defendEffect->fanji){
-				$harm2 = ($tar->pow * 1.23);
-				$obj->hp-=$harm2;
-				// command record,use echo here for temp
-				echo 'side:'.$tar->side.' opSlot '. $tar->slot . ' fanji,hit slot '. $obj->slot . ' for:' . $harm2 . '<br>';
-				if($obj->hp<=0){
-					$fd->onRoleDeadCallback($obj);
-					break;// attacker dead,do not do next logic
-				}
-			}
+			}	
 			// command record,use echo here for temp
 			if($tar->defendEffect->hit){
 				echo 'side:'.$obj->side.' slot '. $obj->slot . ' attack opSlot ' . $tar->slot . ' for:'. $harm.' hp<br>';
@@ -57,6 +48,12 @@ class skl0 extends clsSkillCommonStrategy {
 				echo 'side:'.$obj->side.' slot '. $obj->slot . ' missing attack <br>';
 			}
 		}
-		// step 2 add some factor,baoji,fanji
+		
+		// 被攻击者反馈step
+		foreach($obj->currentTarget as $tar){
+			if(parent::fanjiFormula($obj,$fd,$tar) == false){
+				break;// attacker dead
+			}
+		}
 	}
 }
