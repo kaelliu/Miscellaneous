@@ -8,7 +8,7 @@ class clsSkillCommonStrategy implements clsSkillComputeStrategy {
 				continue;
 			}
 			// 对自己或者是对目标
-			if($bd->target == 1){// 敌方
+			if($bd->target == TARGET_ENEMY){// 敌方
 				foreach($obj->currentTarget as $tar){
 					clsBuffCommonStrategy::onBuffAdd($tar,$bd);
 				}
@@ -100,11 +100,40 @@ class clsSkillCommonStrategy implements clsSkillComputeStrategy {
 		}
 	}
 	
+	public function beAttackStep($obj,$fd,$tar){
+		// 检查被攻击触发的BUFF
+		if($this->beHitBuffTrigger($obj,$fd,$tar)==true){
+
+		}else{
+			// 有BUFF盾就不能反击
+			// if dead,attack his body!
+			$this->fanjiFormula($obj,$fd,$tar);
+		}
+		$tar->hp-=$tar->defendEffect->harm;
+		if($tar->hp<=0){
+			$fd->onRoleDeadCallback($tar);
+		}	
+	}
+
+	// target->defendEffect->harm	
 	public function beHitBuffTrigger($attacker,$fd,$target){
 		// 盾反,吸血,免伤
+		// 遍历被攻击者身上的BUFF!
+		$have = false;
+		foreach($target->buffsOnBody as $buffid=>$buffInfo){
+			$buffContext = clsBuffFactory::getEntity($buffid);
+			if($buffContext->getBuffStaticData()->autoOrBeattack == TRIGGER_BATT){
+				$have = $buffContext->doLogic($target,$attacker,$fd);
+			}
+		}
+		return $have;
 	}
 
 	public function fanjiFormula($obj,$fd,$tar){
+		// rules
+		// 反击 - 如果需要连反,可视将反击为普通攻击行为 - 对behaviourTemplate做继承实现自己逻辑
+		// BUFF反伤类似
+		// 死亡 - 死亡行为对behaviourTemplate做继承实现自己逻辑,做释放死亡技能处理
 		if($tar->defendEffect->fanji){
 			$harm2 = ($tar->pow * 1.23);
 			$obj->hp-=$harm2;

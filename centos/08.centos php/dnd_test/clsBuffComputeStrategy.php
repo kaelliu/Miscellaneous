@@ -1,8 +1,10 @@
 <?php
 
-interface clsBuffComputStrategy{
+interface clsBuffComputeStrategy{
 	// skid for if use some skill can trigger buff effect
-	public function onBuffLogic($obj,$fd,$bd,$skid);
+	// tar 单体目标
+	// 
+	public function onBuffLogic($obj,$tar,$fd,$bd);
 	// what u do on logic,pay back on remove
 	// when hp is less,pow is more add for example
 	// hp change every round,you should have a formula

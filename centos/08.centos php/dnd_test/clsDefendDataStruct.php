@@ -10,6 +10,7 @@ class clsDefendDataStruct {
 	public $bizhong;// 目标是否必中
 	public $poji;// 目标是否破防攻击
 	public $gedang;// 目标是否招架
+	public $harm;// 
 	// buff deside this
 	//public $absorb;// 攻击吸收值
 	//public $reduceHarm;// 减少伤害值
@@ -20,6 +21,7 @@ class clsDefendDataStruct {
 	}
 
 	public function init(){
+		$this->harm = 0;
 		$this->duoshan = false;
 		$this->gedang=false;
 		$this->juefang = false;

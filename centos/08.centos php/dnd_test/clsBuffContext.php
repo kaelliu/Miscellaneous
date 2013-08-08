@@ -10,11 +10,15 @@ class clsBuffContext {
 	}
 
 	public function removeBuff($obj){
-		$this->_comupte->onBuffRemove($obj,$this->_buffStaticData);
+		$this->_compute->onBuffRemove($obj,$this->_buffStaticData);
 	}
 
-	public function doLogic($obj,$fd,$skid){
+	public function doLogic($obj,$tar,$fd){
 		// do and change obj's detail data
-		$this->_comupte->onBuffLogic($obj,$fd,$this->_buffStaticData,$skid);
+		return $this->_compute->onBuffLogic($obj,$tar,$fd,$this->_buffStaticData);
+	}
+
+	public function getBuffStaticData(){
+		return $this->_buffStaticData;
 	}
 }

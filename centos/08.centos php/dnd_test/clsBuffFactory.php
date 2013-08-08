@@ -3,11 +3,11 @@
 class clsBuffFactory {
 	// buffid => compute class id
 	private static $_matchupConfig=array("1"=>1,"2"=>1);
-	private static $_buffConfig=array("1"=>array("tar"=>1,"bon"=>2,"p"=>8,"v"=>100,"lr"=>3,"pov"=>1,"dot"=>1),"2"=>array("tar"=>2,"bon"=>1,"p"=>8,"v"=3,"lr"=>2,"pov"=>2,"dot"=>0));
+	private static $_buffConfig=array("1"=>array(1,2,8,100,3,1,1,1),"2"=>array(1,1,17,200,2,2,0,2));
 	final static public function getEntity($buffId){
 		$buffIndex = self::$_matchupConfig[$buffId];
 		$bfcomp = "bul" .  $buffIndex;
-		require_once DIR_BUFFS . "/buff/compute/" . $bfcomp . "php";
+		require_once DIR_FILE_PATH . "/buff/compute/" . $bfcomp . ".php";
 	
 		if (class_exists($bfcomp)){
 			$context = new clsBuffContext(self::getBuffStatic($buffId),new $bfcomp);
@@ -20,14 +20,15 @@ class clsBuffFactory {
 	final static public function getBuffStatic($buffId){
 		if(isset(self::$_buffConfig[$buffId])){
 			$staticData =  new clsBuffStaticData();
-			$staticData->id = $buffId;
-			$staticData->value=self::$_buffConfig[$buffId]["v"];// blabla
-			$staticData->target=self::$_buffConfig[$buffId]["tar"];
-			$staticData->buffOrNerf=self::$_buffConfig[$buffId]["bon"];
-			$staticData->leftRound=self::$_buffConfig[$buffId]["lr"];
-			$staticData->percentOrValue=self::$_buffConfig[$buffId]["pov"];
-			$staticData->targetProperty=self::$_buffConfig[$buffId]["p"];
-			$staticData->dotOrPersisit=self::$_buffConfig[$buffId]["dot"];
+			$staticData->id = $buffId;		
+			$staticData->target=self::$_buffConfig[$buffId][0];
+			$staticData->buffOrNerf=self::$_buffConfig[$buffId][1];// mean less can be remove,use negative for healing
+			$staticData->targetProperty=self::$_buffConfig[$buffId][2];
+			$staticData->value=self::$_buffConfig[$buffId][3];// blabla
+			$staticData->leftRound=self::$_buffConfig[$buffId][4];
+			$staticData->percentOrValue=self::$_buffConfig[$buffId][5];
+			$staticData->dotOrPersisit=self::$_buffConfig[$buffId][6];
+			$staticData->autoOrBeattack=self::$_buffConfig[$buffId][7];
 			return $staticData;
 		}else{
 			return null;

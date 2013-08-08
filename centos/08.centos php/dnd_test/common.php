@@ -51,6 +51,11 @@ const HARM = 20;
 const XIXUE = 21;
 const ALLMAIN = 22;
 
+const TRIGGER_AUTO = 1;
+const TRIGGER_BATT = 2;
+const TARGET_ENEMY = 1;
+const TARGET_SELF  = 2;
+
 require('ctlFight.php');
 
 // 自动加载

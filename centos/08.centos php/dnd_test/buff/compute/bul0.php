@@ -1,7 +1,7 @@
 <?php
 // bufflogic 0 - do persist property adding
-class bul0 extends clsBuffComputeStrategy {
-	public function onBuffLogic($obj,$fd,$bd,$skid){
+class bul0 extends clsBuffCommonStrategy {
+	public function onBuffLogic($obj,$tar,$fd,$bd){
 		return true;
 	}
 }

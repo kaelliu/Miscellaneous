@@ -15,21 +15,22 @@ class clsRoleStaticData {
 	public $dex = 0;// speed,baoji,duoshan
 	public $buffsOnBody = array();// buffid=>(clsBuffFightData)
 	public $currentTarget = array();
-	// 方便取最终加成值
-	public $buffAddingValue = array();// buff effect value,type=>convert to value
+	public $currentSkillID = 0; // 当前技能ID
+	// 方便取最终加成值 - nouse
+	//public $buffAddingValue = array();// buff effect value,type=>convert to value
 	public $defendEffect;// clsDefendDataStruct
-
+	
 	public function __construct(){
 		$this->defendEffect = new clsDefendDataStruct();
 	}
 
-	public function getEffectedFinalValue($type){
-		if(isset($buffAddingValue[$type]){
-			return $buffAddingValue[$type];
-		}else{
-			return 0;
-		}
-	}
+	//public function getEffectedFinalValue($type){
+	//	if(isset($buffAddingValue[$type]){
+	//		return $buffAddingValue[$type];
+	//	}else{
+	//		return 0;
+	//	}
+	//}
 
 	// another solution
 	public function getEffectedFinValue($base,$type){

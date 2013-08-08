@@ -5,7 +5,7 @@ class clsBuffCommonStrategy implements clsBuffComputeStrategy {
 		// 是否 有同ID BUFF,刷新剩余回合数
 		if(isset($obj->buffsOnBody[$bd->id])){
 			$obj->buffsOnBody[$bd->id]->lastRound=$bd->leftRound;
-			echo 'refresh buff on:'.$obj->slot;
+			echo 'refresh buff on slot:'.$obj->slot.'<br>';
 		}else{
 			// 角色添加buff
 			$buffInfo = new clsBuffFightData;
@@ -13,12 +13,12 @@ class clsBuffCommonStrategy implements clsBuffComputeStrategy {
 			$buffInfo->lastRound = $bd->leftRound;
 			$buffInfo->buffAddValue[$bd->targetProperty] = $bd->value;
 			$obj->buffsOnBody[$bd->id]=$buffInfo;
-			if(isset($obj->buffAddingValue[$bd->targetProperty])){
-				$obj->buffAddingValue[$bd->targetProperty]+=$bd->value;
-			}else{
-				$obj->buffAddingValue[$bd->targetProperty]=$bd->value;
-			}
-			echo 'add buff on:'.$obj->slot;
+			//if(isset($obj->buffAddingValue[$bd->targetProperty])){
+			//	$obj->buffAddingValue[$bd->targetProperty]+=$bd->value;
+			//}else{
+			//	$obj->buffAddingValue[$bd->targetProperty]=$bd->value;
+			//}	
+			echo 'add buff on slot:'.$obj->slot.'<br>';
 		}
 	}
 
@@ -29,7 +29,7 @@ class clsBuffCommonStrategy implements clsBuffComputeStrategy {
 		if($type == 1){
 			return $v+$addV;
 		}else if($type == 2){
-			return $v*$(1+$addV);
+			return $v*(1+$addV);
 		}
 	}
 
@@ -49,12 +49,16 @@ class clsBuffCommonStrategy implements clsBuffComputeStrategy {
 		// 2.persist 的根据逻辑变化的,buff消除后根据逻辑逆向算法恢复数值
 		//   如:血量越少,加成力量越多,需要自实现逆向逻辑
 		//   回合中阶段逻辑变化导致每回合不一样的属性变化,记录在角色
-		//   buffOnBody对应clsBuffFightData结构中的总值移除
+		//   buffOnBody对应clsBuffFightData结构中的总值移除	
 		if(isset($obj->buffsOnBody[$bd->id])){
-			$obj->buffAddingValue[$obj->buffsOnBody[$bd->id]->targetProperty]-=$obj->buffsOnBody[$bd->id]->value;
+			//$obj->buffAddingValue[$obj->buffsOnBody[$bd->id]->targetProperty]-=$obj->buffsOnBody[$bd->id]->value;
 			unset($obj->buffsOnBody[$bd->id]);
 
-			echo 'remove buff on:'.$obj->slot;
+			echo 'remove buff on:'.$obj->slot . '<br>';
 		}
+	}
+
+	public function onBuffLogic($obj,$tar,$fd,$bd){
+		return true;
 	}
 }

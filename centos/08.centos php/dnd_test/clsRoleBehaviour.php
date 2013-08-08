@@ -19,20 +19,24 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 	public function doProcessBuff($team,$usedSkID){
 		// 触发被动技能给自己挂BUFF的过程在战斗数据初始化
 		// buff逻辑
+		$this->_roleStaticData->currentSkillID = $usedSkID;// 如果某些BUFF需要对特定使用技能加成属性！
 		foreach($this->_roleStaticData->buffsOnBody as $buffid=>$buffInfo){
 			$buffContext = clsBuffFactory::getEntity($buffid);
 			// check buff valid or not
-			if($buffInfo->lastRounds - 1 <= 0){
+			if($buffInfo->lastRound - 1 <= 0){
 				//$lastrounds = 0;
 				// remove it
-				unset($this->_roleStaticData->buffsOnBody[$buffid]);
 				// 1.自动消失,按回合数
-				// 2.主动消失,被攻击后消失或作用 -- 触发
+				// 2.主动消失,被攻击后消失或作用 -- 触发	
 				$buffContext->removeBuff($this->_roleStaticData);
 				continue;
 			}
-			$buffInfo->lastRounds -= 1;
-			$this->_goesOn = $buffContext->doLogic($this->_roleStaticData,$team,$usedSkID);// if stun or somebuff,make role can not move
+			$buffInfo->lastRound -= 1;
+			echo 'left round:'.$buffInfo->lastRound.'<br>';
+			// process my buff
+			if($buffContext->getBuffStaticData()->autoOrBeattack == TRIGGER_AUTO){
+				$this->_goesOn = $buffContext->doLogic($this->_roleStaticData,null,$team);// if stun or somebuff,make role can not move
+			}
 		}
 	}
 
@@ -43,11 +47,12 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 			// 合体技check or more rules
 			// add rage every move
 			$this->_roleStaticData->rage+=10;
-			if($this->_roleStaticData->rage > 100){
-				foreach($this->_roleStaticData->mainskill as $skill){
-					$usedSkID = $this->_roleStaticData->mainskill[$this->_currentSkCursor];
+			if($this->_roleStaticData->rage >= 100){
+				foreach($this->_roleStaticData->mainSkill as $skill){
+					$usedSkID = $this->_roleStaticData->mainSkill[$this->_currentSkCursor];
+					echo 'side:'.$this->_roleStaticData->side.' slot:'.$this->_roleStaticData->slot.' pick up skill:' . $usedSkID.'<br>';
 					$this->_currentSkCursor++;
-					if($this->_currentSkCursor >= count($this->_roleStaticData->mainskill))
+					if($this->_currentSkCursor >= count($this->_roleStaticData->mainSkill))
 					{
 						$this->_currentSkCursor = 0;
 					}
@@ -59,7 +64,7 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 	}
 
 	public function doPickUpTarget($team,$usedSkID){
-		if($this->_goesOn){
+		if($this->_goesOn){;
 			$this->_skillContext = clsSkillFactory::getEntity($usedSkID);
 			if($this->_skillContext!=null){
 				$this->_roleStaticData->currentTarget = $this->_skillContext->pickupTarget($this->_roleStaticData,$team);
@@ -74,7 +79,7 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 		}
 	}
 
-	public function doOneAction($team){
+	public function doOneAction($team){	
 		if($this->_goesOn){
 			$command = $this->_skillContext->doLogic($this->_roleStaticData,$team); // call skill context by skillid and do skill data handle logic
 			$this->_outputOneAction($command);

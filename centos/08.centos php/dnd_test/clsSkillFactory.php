@@ -5,7 +5,8 @@ class clsSkillFactory {
 	// 测试数据
 	// 普通攻击,技能攻击,治疗全体,附加buff技能
 	private static $_matchupConfig=array("0"=>array("0","0"),"1"=>array("0","1"),"2"=>array("0","2"),"3"=>array("0","3"));
-	private static $_skillStaticData=array("0"=>array("val"=>0,"ez"=>1),"1"=>array("val"=>-123,"ez"=>1),"2"=>array("val"=>110,"ez"=>6),"3"=>array("val"=>20,"ez"=>1,"buff"=>array("1")));
+	// 负值加血
+	private static $_skillStaticData=array("0"=>array("val"=>0,"ez"=>1),"1"=>array("val"=>123,"ez"=>1),"2"=>array("val"=>20,"ez"=>1,"buff"=>array("1","2")),"3"=>array("val"=>110,"ez"=>6));
 	final static public function getEntity($skillId){
 		$skillIndex = self::$_matchupConfig[$skillId];
 		$skcond = "skc" . $skillIndex[0];

@@ -115,6 +115,8 @@ class clsFightData {
 		$slot2->dex=15;
 		$slot3->hp=101;
 		$slot3->dex=16;
+		$slot3->mainSkill[]=2;
+		$slot3->rage=90;
 		$slot4->hp=107;
 		$slot4->dex=14;
 		$slot5->hp=200;
