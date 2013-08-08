@@ -27,14 +27,15 @@ class clsRoleBehaviour extends clsBehaviourTemplate {
 				//$lastrounds = 0;
 				// remove it
 				// 1.自动消失,按回合数
-				// 2.主动消失,被攻击后消失或作用 -- 触发	
+				// 2.主动消失,被攻击后消失或作用 -- 触发
+				// 3.both,昏睡BUFF,不被攻击时不能动,被攻击BUFF消失	
 				$buffContext->removeBuff($this->_roleStaticData);
 				continue;
 			}
 			$buffInfo->lastRound -= 1;
-			echo 'left round:'.$buffInfo->lastRound.'<br>';
+			echo 'buff:'.$buffid.' left round:'.$buffInfo->lastRound.'<br>';
 			// process my buff
-			if($buffContext->getBuffStaticData()->autoOrBeattack == TRIGGER_AUTO){
+			if(($buffContext->getBuffStaticData()->autoOrBeattack & TRIGGER_AUTO) != 0){
 				$this->_goesOn = $buffContext->doLogic($this->_roleStaticData,null,$team);// if stun or somebuff,make role can not move
 			}
 		}

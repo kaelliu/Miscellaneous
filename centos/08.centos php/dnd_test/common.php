@@ -53,6 +53,7 @@ const ALLMAIN = 22;
 
 const TRIGGER_AUTO = 1;
 const TRIGGER_BATT = 2;
+const TRIGGER_BOTH = 4;
 const TARGET_ENEMY = 1;
 const TARGET_SELF  = 2;
 

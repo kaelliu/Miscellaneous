@@ -18,7 +18,7 @@ class clsBuffCommonStrategy implements clsBuffComputeStrategy {
 			//}else{
 			//	$obj->buffAddingValue[$bd->targetProperty]=$bd->value;
 			//}	
-			echo 'add buff on slot:'.$obj->slot.'<br>';
+			echo 'add buff:'.$bd->id.' on slot:'.$obj->slot.'<br>';
 		}
 	}
 

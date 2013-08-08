@@ -16,7 +16,9 @@ class bul2 extends clsBuffCommonStrategy {
 		$tar->buffsOnBody[$bd->id]->buffAddValue[FANTAN] -= $harm;
 		if($tar->buffsOnBody[$bd->id]->buffAddValue[FANTAN]<=0){
 			// 盾破
-			echo 'shield be destory!'
+			echo 'shield be destory!';
+			// remove buff
+			unset($tar->buffsOnBody[$bd->id]);
 		}
 		// 反弹给我的
 		$obj->hp-=$reflectValue;

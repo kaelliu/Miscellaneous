@@ -122,7 +122,7 @@ class clsSkillCommonStrategy implements clsSkillComputeStrategy {
 		$have = false;
 		foreach($target->buffsOnBody as $buffid=>$buffInfo){
 			$buffContext = clsBuffFactory::getEntity($buffid);
-			if($buffContext->getBuffStaticData()->autoOrBeattack == TRIGGER_BATT){
+			if(($buffContext->getBuffStaticData()->autoOrBeattack & TRIGGER_BATT)!=0){
 				$have = $buffContext->doLogic($target,$attacker,$fd);
 			}
 		}
