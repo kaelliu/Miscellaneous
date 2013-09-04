@@ -1,0 +1,46 @@
+﻿1.安装
+工具：Alchemy，Cygwin，FlexSDK，Java(JRE)，FlashCS4
+Alchemy下载页面（点此直接下载文件）： http://labs.adobe.com/downloads/alchemy.html
+Java(JRE)下载页面：http://java.sun.com/javase/downloads/index.jsp
+FlexSDK下载地址（点此直接下载文件）：http://opensource.adobe.com/wiki/display/flexsdk/Download+Flex+3
+Cygwin下载页面（点此直接下载文件）：http://www.cygwin.cn/site/install/
+a、Alchemy，下载解压缩后，放在C:/alchemy 路径下。
+b、Java，这个直接点击，一路next安装就可以了。
+c、FlexSDK，下载解压缩后重命名，放在C:/FlexSDK路径下。
+d、Cygwin，一路默认next，到“Select Package”那个界面时，会有一个列表，需要选择如下三个包：
+  	 Archive -> zip
+         Devel   -> gcc-g++ 
+         Perl
+因为得要Cygwin知道FleSDK和Alchemy的路径，所以还要设置一点东西：
+将C:/cygwin/etc 文件夹下的文件"profile"中
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin:$PATH.
+改成：
+source /cygdrive/c/alchemy/alchemy-setup             PATH=/usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin:/cygdrive/c/alchemy/achacks:/cygdrive/c/FlexSDK/bin:$PATH
+后保存文件（注意里面的路径……c/alchemy/……）。
+2.c代码实现加密解密
+参考具体文件和需求，需要对外放的函数在main里声明变量，类似
+AS3_Val result = AS3_Object("doAes: AS3ValType, doUnAes: AS3ValType,doDecode:AS3ValType",
+	 doAesVal, doUnAesVal,doDecodeVal);这三个函数可以通过外部的Clibobject调用。具体的C函数内部的AS3_call参考alchemy的API DOCUMENT
+3.编译成SWC，在cygwin中找到你的alchemy目录，编译前输入
+source /cygdrive/c/alchemy/alchemy-setup
+alc-on 
+如果是第一次，在alchemy目录下输入./config
+然后进入你的程序目录，gcc yourfile.c -O3 -Wall -swc -o yourfile.swc,如果需要有包含头文件，库文件操作，请参考GCC命令目录。另外，如果C文件中找不到前面的模块的函数定义，简单的话你可以考虑把需要的函数拿到yourfile.c里一起，或者你需要先编译出yourneedfunction.o来
+4.将swc放到程序目录，并导入构建路径里的库路径
+在程序中通过初始化Lib后就可以调用相应的函式。
+Import cmodule.aes.CLibInit
+var aes:CLibInit = new CLibInit;
+var aeslib:Object = aes.init();
+然后aeslib.doyourfunction();
+关于传入传出的参数，需要你自己在C代码中定义好，函数返回一个AS3_Val,需要传入的形如
+AS3_Val doDecode(void* data,AS3_Val args),而data区可以不考虑，你传入的参数列表要在内部对应
+AS3_ArrayValue(args,"AS3ValType,IntType",&input,&in_len);
+即我传入的是一个as3object,和一个int,在这个函数里传入的是一个bytearray,然后下面需要通过
+AS3_ByteArray_readBytes((void*)ar,input,in_len);可以把值读出来给指针ar
+5.加密解密思路
+1).用QT做的程序统一对需要加密的SWF做字节按密码异或后存出来，这个功能加在图片处理的那个里面一起。具体实现就是通过FILE指针对文件做一些简单操作
+2).需要调用这个swf的,需要在加载完毕后,调用lib里的doDecode获得正确的swf的bytearray,然后加载,当然你传入的也是这个文件相应的bytearray_data
+3).这些被还原在内存中的bytearray,不知道可否被一些flash吸血工具抓取,但是从页面调取时获得的原swf应该是不正确的不能被反编译的
+4).加密解密的函数在把aes.swc做成aes.rar后，反编译library.swf可以看到FSM_dodecode函数,是一些汇编代码,这些是上面声明的对外开放的函数,而内部的函数,在状态机的Mstate中的funcs可以看到,整个加密的密钥就在这个函数中,目前还未发现这些sealed function table是从哪里开始被加载进去的.
+5).加密后用一些工具打开是错误的,要是知道密钥和算法,其实破解也是很简单的
+6).需要进一步效率的测试,因为是文件逐字节的操作,main.swf文件其实有381765个字节,也许可以考虑只按一定规则加/解其中一小部分的字节的做法来提高效率
