@@ -1,0 +1,27 @@
+﻿1.很多关于goroutine的hello word的实验，都会不小心陷入一个误区，就是忽略主goroutine与辅goroutine职责的区别。
+我们要始坚持如下惯用法：
+
+辅goroutine总是提供服务，行为模式是先接受信息，然后发送信息。
+主goroutine总是主控者，行为模式是先向辅goroutine发送信息，然后接受信息。
+
+在程序结束前，最后一个从channel接受（汇集）信息的，总是主goroutine。
+
+2.go的自身的调度是非强占式的，除非存在有IO、睡眠，系统调用之类的，或者设置为多个核让操作系统来进行抢占式调度，否则会一直在死循环中运行下去。
+例子：
+var a string
+var done bool
+
+func setup() {
+	a = "hello, world"
+	done = true
+}
+
+func main() {
+	go setup()
+	for !done {
+	}
+	print(a)
+}
+
+use explicit synchronization
+3.Don't communicate by sharing memory; share memory by communicating

@@ -1,0 +1,16 @@
+﻿1.最左前缀原则
+定义：最左前缀原则指的的是在sql where 字句中一些条件或表达式中出现的列的顺序要保持和多索引的一致或以多列索引顺序出现，只要出现非顺序出现、断层都无法利用到多列索引。
+
+举例说明：上面给出一个多列索引(username,password,last_login)，当三列在where中出现的顺序如(username,password,last_login)、(username,password)、(username)才能用到索引，如下面几个顺序(password,last_login)、(passwrod)、(last_login)—这三者不从username开始，(username,last_login)—断层，少了password，都无法利用到索引。
+因为B+tree多列索引保存的顺序是按照索引创建的顺序，检索索引时按照此顺序检索
+
+2.like %xxx% 用不了，like xxx%可以
+3.条件表达式中计算，类似where level > level + 1 全表扫了。
+4.or会遍历表就算有索引
+5.order by不加where,limit不会用到
+6.UNION All 直接返回并集，可以避免去重的开销。之所说“尝试”用UNION All 替代 OR来优化sql语句，因为这不是一直能优化的了，这里只是作为一个方法去尝试。
+7.避免重复索引
+比如建一个(username),(username,password), (username,password,last_login),很明显第一个索引是重复的，因为后两者都能满足其功能。
+要有个意识就是，在满足功能需求的情况下建最少
+索引。
+8.索引列大量重复内容与满足条件内容的，索引无效
