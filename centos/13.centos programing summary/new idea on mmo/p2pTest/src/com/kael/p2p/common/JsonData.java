@@ -1,0 +1,250 @@
+package com.kael.p2p.common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class JsonData {
+	private Map<String, Object> map = null;
+	private List<Object> list = null;
+	
+	public JsonData() {
+
+	}
+	
+	public JsonData(String jsonString) {
+		decode(jsonString);
+	}
+	
+	public void decode(String jsonString) {
+		if(jsonString == null) {
+			return;
+		}
+		String dat = jsonString.trim();
+		char first, last;
+		first = dat.charAt(0);
+		last = dat.charAt(dat.length()-1);
+		if(first == '[' && last == ']') {
+			// list
+			setupList(dat.substring(1, dat.length()-1));
+		}
+		else if(first == '{' && last == '}') {
+			// map
+			setupMap(dat.substring(1, dat.length()-1));
+		}
+	}
+	
+	private void setupList(String data) {
+		list = new ArrayList<Object>();
+		map = null;
+		for(String dat : data.split(",")) {
+			list.add(getElement(dat));
+		}
+	}
+	
+	private void setupMap(String data) {
+		map = new HashMap<String, Object>();
+		list = null;
+		for(String dat : data.split(",")) {
+			String[] element = dat.split(":", 2);
+			String key = getString(element[0]);
+			if(key == null) {
+				continue;
+			}
+			map.put(key, getElement(element[1]));
+		}
+	}
+	
+	private Object getElement(String dat) {
+		if(dat == null) {
+			return null;
+		}
+		String element = dat.trim();
+		if(element.startsWith("\"")) {
+			return getString(element);
+		}
+		element = element.toLowerCase();
+		// boolean
+		if(element.indexOf("true") != -1) {
+			return new Boolean(true);
+		}
+		if(element.indexOf("false") != -1) {
+			return new Boolean(false);
+		}
+		try {
+			return Integer.parseInt(element);
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public String getString(String element) {
+		char first, last;
+		try {
+			first = element.charAt(0);
+			last = element.charAt(element.length()-1);
+			if(first != '"' || last != '"') {
+				return null;
+			}
+			element = element.substring(1, element.length()-1);
+			return element;
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public String encode() {
+		if(list != null) {
+			return encodeList();
+		}
+		if(map != null) {
+			return encodeMap();
+		}
+		return null;
+	}
+	
+	private String encodeList() {
+		/*
+		 * [135,163,TRUE,"aiueo"]
+		 */
+		StringBuilder str = new StringBuilder();
+		str.append("[");
+		Iterator<Object>iter = list.iterator();
+		while(iter.hasNext()) {
+			Object obj = iter.next();
+			if(obj instanceof String) {
+				str.append('"');
+				str.append(encodeString((String)obj));
+				str.append('"');
+			}
+			else {
+				str.append(obj);
+			}
+			if(iter.hasNext()) {
+				str.append(",");
+			}
+		}
+		str.append("]");
+		return str.toString();
+	}
+	
+	private String encodeString(String data) {
+		return data;
+	}
+	
+	private String encodeMap() {
+		/*
+		 * {"a":123,"b":456,"c":true}
+		 */
+		StringBuilder str = new StringBuilder();
+		str.append("{");
+		Iterator<Entry<String, Object>> iter = map.entrySet().iterator();
+		while(iter.hasNext()) {
+			Entry<String, Object> element = iter.next();
+			str.append('"');
+			str.append(encodeString(element.getKey()));
+			str.append('"');
+			str.append(':');
+			Object obj = element.getValue();
+			if(obj instanceof String) {
+				str.append('"');
+				str.append(encodeString((String)obj));
+				str.append('"');
+			}
+			else {
+				str.append(obj);
+			}
+			if(iter.hasNext()) {
+				str.append(",");
+			}
+		}
+		str.append("}");
+		return str.toString();
+	}
+	
+	public void clear() {
+		if(list != null) {
+			list.clear();
+		}
+		if(map != null) {
+			map.clear();
+		}
+	}
+	
+	@Override
+	public String toString() {
+		if(list != null) {
+			return list.toString();
+		}
+		if(map != null) {
+			return map.toString();
+		}
+		return null;
+	}
+	
+	public void add(Object data) {
+		if(list == null) {
+			list = new ArrayList<Object>();
+			map = null;
+		}
+		list.add(data);
+	}
+	public void add(int index, Object data) {
+		if(list == null) {
+			list = new ArrayList<Object>();
+			map = null;
+		}
+		list.add(index, data);
+	}
+	public Object get(int index) {
+		if(list != null) {
+			return list.get(index);
+		}
+		return null;
+	}
+	public void remove(int index) {
+		if(list != null) {
+			list.remove(index);
+		}
+	}
+	public List<Object> getList() {
+		return list;
+	}
+	
+	public void put(String key, Object data) {
+		if(map == null) {
+			map = new HashMap<String, Object>();
+			list = null;
+		}
+		map.put(key, data);
+	}
+	public void remove(String key) {
+		if(map != null) {
+			map.remove(key);
+		}
+	}
+	public Object get(String key) {
+		if(map != null) {
+			return map.get(key);
+		}
+		return null;
+	}
+	public Map<String, Object> getMap() {
+		return map;
+	}
+	
+	public int size() {
+		if(list != null) {
+			return list.size();
+		}
+		if(map != null) {
+			return map.size();
+		}
+		return 0;
+	}
+}
