@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Kaeltest</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world,you left rotate times:</string>
+    <string name="start">开始转</string>
+    <string name="stop">不要转</string>
+
+</resources>

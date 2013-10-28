@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Kael</title>
+<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="jQueryRotate.2.2.js"></script>
+<script type="text/javascript" src="jquery.easing.min.js"></script>
+<script type="text/javascript">
+	/*
+	$(function(){
+		$("#startbtn").rotate({
+			bind:{
+				click:function(){
+					var a = Math.floor(Math.random() * 360);
+					$(this).rotate({
+						duration:3000,
+						angle:0,
+						animateTo:3600+a,
+						easing:$.easing.easeOutSine,
+						callback:function(){
+							
+						}
+					});
+				}
+			}
+		});
+	});
+	*/
+	$(function(){ 
+    	$("#startbtn").click(function(){ 
+        	lottery(); 
+    	}); 
+	});
+	
+	function lottery(){
+		var a = Math.floor(Math.random() * 360);
+		$("#startbtn").rotate({
+			duration:3000,
+			angle:0,
+			animateTo:3600+a,
+			easing:$.easing.easeOutSine,
+			callback:function(){						
+						}
+		});
+	}
+	
+	function showAndroidToast(toast){
+		 myInterfaceName.showToast(toast);
+	}
+</script>
+<link rel="stylesheet" href="lottery.css">
+</head>
+<body>
+<div class="main"> 
+	<h2 id="title" class="top_title">kael lottery test</h2>
+	<div class="msg"></div>
+	<div class="demo">
+    	<div id="disk"></div> 
+    	<div id="start">
+    		<img src="start.png" id="startbtn">
+    	</div> 
+    	<input type="button"
+            value="Say hello" onClick="showAndroidToast('Hello Android!')" />
+        <input type="button"
+            value="doRotate" onClick="lottery()" />
+    </div>
+</div> 
+<div id="footer">
+<p>Powered by finchstudio</p>
+</div>
+</body>
+</html>
