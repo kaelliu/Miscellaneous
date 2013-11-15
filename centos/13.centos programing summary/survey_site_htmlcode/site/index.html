@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+  <script src="js/jquery.charcounter.js"></script>
+  <script src="js/ICanHaz.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="kael">
+    <!--link rel="shortcut icon" href="../../assets/ico/favicon.png"-->
+    <title>Simple survey system by kael</title>
+	<!-- templates -->
+	<script id="user" type="text/html">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+			  <h4 class="panel-title">
+				<a data-toggle="collapse" data-parent="#accordion" href={{ hrefid }}>
+				  {{QuestionTitle}}
+				</a>
+			  </h4>
+			</div>
+			<div id={{ passinid }} class="panel-collapse collapse">
+			  <div class="panel-body" id={{bodyid}}>
+			  </div>
+			</div>
+		</div>
+    </script>
+	
+	<script id="radioType" type="text/html">
+		<form>
+			{{#stooges}}
+			  <label>
+				<input type="radio" name="optionsRadios" id={{id}} {{checked}}>
+				{{contents}}
+			  </label><br/>
+			{{/stooges}}
+		</form>
+	</script>
+
+	<script id="checkType" type="text/html">
+		<form>
+			{{#stooges}}
+			  <label>
+				<input type="checkbox" name="optionsRadios" id={{id}} {{checked}}>
+				{{contents}}
+			  </label><br/>
+			{{/stooges}}
+		</form>
+	</script>
+
+	<script id="inputMutile" type="text/html">
+		<form accept-charset="UTF-8" action="">
+			<textarea class="form-control counted" name="message" placeholder="Type in your message" rows="5" style="margin-bottom:10px;"></textarea>
+			<h6 class="pull-right" id="counter">320 characters remaining</h6>
+		</form>
+	</script>
+
+	<script id="inputSingleDigi" type="text/html">
+		<!--input type="number" style="width: 45px; padding: 1px" value="1"  min="1" max="99"!-->
+		<input type="text" id={{iid}} value="1" style="width: 45px; padding: 1px"/>
+	</script>
+	
+	<script id="dragableCell" type="text/html">
+		<div class="list-group">
+		  <ul id={{sid}}>
+			  {{#stooges}}
+			  <a href="#" class="list-group-item" id={{dndid}}>{{contents}}</a>
+			  {{/stooges}}
+		  </ul>
+	    </div>
+	</script>
+
+	<script id="msgBar" type="text/html">
+		<div class="alert alert-success">
+			<span class="glyphicon glyphicon-ok-circle"></span><strong>{{msg}}</strong>
+			<a href="http://www.cuif.com" class="alert-link">{{link}}</a>
+		</div>
+	</script>
+	
+    <!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="jqui_css/custom-theme/jquery-ui-1.10.0.custom.css" />
+    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+	<link href="jumbotron-narrow.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>	
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+	  <nav class="navbar navbar-default" role="navigation">
+ 		<div class="navbar-header">
+    		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bsnavbar-collapse">
+      			<span class="sr-only">Toggle navigation</span>
+     			<span class="icon-bar"></span>
+      			<span class="icon-bar"></span>
+    			<span class="icon-bar"></span>
+    		</button>
+   		<a class="navbar-brand">问卷调查系统</a>
+ 	 	</div>
+		<div class="collapse navbar-collapse" id="bsnavbar-collapse">
+    			<ul class="nav navbar-nav">
+      				<li class="active" id="catalogStu"><a href="#">学生问卷</a></li>
+      				<li id="catalogTea"><a href="#">教师问卷</a></li>
+					<li id="catalogPar"><a href="#">家长问卷</a></li>
+				</ul>
+	        	<ul class="nav navbar-nav navbar-right">
+      				<li class="dropdown">
+        				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Menus <b class="caret"></b></a>
+        				<ul class="dropdown-menu">
+          					<li><a href="#">意见反馈</a></li>
+          					<li class="divider"></li>
+          					<li><a href="#"><span class="glyphicon glyphicon-off"></span>退出</a></li>
+        				</ul>
+      				</li>
+    			</ul>
+  		</div><!-- /.navbar-collapse -->
+	  </nav>
+	  <div class="container">
+			<div class="row">
+				<div class="span3">
+					<div class="well well-sm">
+						<div class="panel-group" id="accordion">
+						</div>
+					</div>
+				</div>
+				<button type="button" class="btn btn-sm btn-primary pull-right" id="nextBtn">next</button>
+			</div>
+		</div>
+      </div>
+	  
+	  <!-- horizon line -->
+	  <hr>
+	  
+      <footer class="bs-footer" role="contentinfo">
+        <p class="pull-right" style="margin-right:16px;"> Copyright &copy; 2013 kael All Rights Reserved.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="dist/js/bootstrap.min.js"></script>
+	<script src="assets/js/application.js"></script>
+  </body>
+</html>

@@ -1,0 +1,2 @@
+mix resource and logic javascript
+google chrome need add --allow-file-access-from-files and --disable-web-security start locally
