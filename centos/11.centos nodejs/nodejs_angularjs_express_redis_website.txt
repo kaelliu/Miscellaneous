@@ -1,0 +1,90 @@
+1.nodejs
+1).安装，源码安装三部曲。。。不用我多说了吧
+./configure
+make
+sudo make install
+2)npm包的安装
+curl http://npmjs.org/install.sh | sudo sh
+安装完后即可，npm install -g..
+3).辅助功能包
+n:多版本管理器
+supervisor:监视文件改动及时生效
+cluster:多个nodejs进程监听同一个端口
+4).适合io密集型业务，不适合计算密集型
+
+2.nodejs,web框架express
+1).express 4.x改动可以在他官方github上看到
+2).路由路径->模板引擎jade，语法功能->渲染页面
+3).结合angular.js,增强controller功能->路由注册页面模板与控制器->控制器内含有数据->获取数据->展示在页面
+3.前端bootstrap
+4.angularjs
+AngularJS通过使用我们称为标识符(directives)的结构，让浏览器能够识别新的语法。例如：
+使用双大括号{{}}语法进行数据绑定；
+使用DOM控制结构来实现迭代或者隐藏DOM片段；
+支持表单和表单的验证；
+能将逻辑代码关联到相关的DOM元素上；
+能将HTML分组成可重用的组件。
+5.redis
+全局安装
+sudo npm install -g redis
+但是代码中，直接通过require()的方式是没有办法调用全局安装的包的
+项目内安装
+npm install redis,会在node_modules目录下生成
+
+使用
+var redis = require("redis");
+
+var client = redis.createClient();
+
+client.on("error",function(err){
+    console.log(err);
+});
+
+client.get('any',function(err,reply){
+        if(err){
+                console.log(err);
+                return;
+        }
+        console.log(reply);
+        client.quit();
+});
+6.socket.io
+在程序范围内安装,改写package.json:”socket.io”:”*”  -> npm install
+在全局安装,npm install socket.io
+客户端使用需要script内包含
+服务端使用
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', routes.vote);
+    server.listen(app.get('port'), function(){
+        console.log('Express server listening on port ' + app.get('port'));
+});
+
+OR
+var io = require('socket.io').listen(8080);
+ 
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+
+client side:
+<meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>测试nodejs</title>
+  
+  
+ <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost:8080');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+</script>
