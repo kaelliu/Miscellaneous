@@ -72,7 +72,7 @@ else
     # $? is last call's function return code
     # no space here
     count=`wc -l tmp.file | awk '{print $1}'`
-    # do know why wc will return one less,and let it be a number
+    # wc -l will count \n here,so need add one element count,and let it be a number
     let sum=$count+1
     pack $sum
 fi
