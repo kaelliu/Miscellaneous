@@ -12,6 +12,8 @@ function pack()
             echo "only one version"
             exit 0
         else
+            # delete the origin version zip
+            rm *-to-*.zip
             version_latest=`head -n 1 tmp.file`
             for (( var=1 ; var <= $1 ; var++))
             do
@@ -20,8 +22,8 @@ function pack()
                 if [ $left -ne 0 ] ; then
                     version_now=`tail -n $var tmp.file | head -n 1`
                     # combine version name string
-                    version_code=${version_now}'to'${version_latest}'.zip'
-                    version_deletefile=${version_now}'to'${version_latest}'.del'
+                    version_code=${version_now}'-to-'${version_latest}'.zip'
+                    version_deletefile=${version_now}'-to-'${version_latest}'.del'
                     # > is new add,>> is append so this is not need
                     #if [ -e $version_deletefile ] ; then
                     #                       rm $version_deletefile
@@ -29,7 +31,8 @@ function pack()
                     # call git diff get diff files and zip.
                     # if deleted file,we need save to a file for information
                     # out put to version.del and zip into zipball,then delete this file
-                    git diff --name-only $version_now $version_latest | xargs zip $version_code | grep "zip warning: name not matched: " | awk 'NF==6 {print $6}' > $version_deletefile | xargs zip $version_code
+                    git diff --name-only $version_now $version_latest | xargs zip $version_code | grep "zip warning: name not matched: " | awk 'NF==6 {print $6}' > $version_deletefile
+                    zip $version_code $version_deletefile
                         # -F is set the splitter
                         # awk -F: 'NF==3 {print $3}'
                     rm $version_deletefile
