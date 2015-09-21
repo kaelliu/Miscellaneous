@@ -33,7 +33,7 @@
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>com.bmgsoft.testgame</string>
+				<string>com.ketchapp.2048</string>
 				<key>bundle-version</key>
 				<string>1.0.0</string>
 				<key>kind</key>
